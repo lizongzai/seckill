@@ -31,7 +31,7 @@ public class MD5Utils {
    * @return
    */
   public static String inputPassToFormPass(String inputPass) {
-    return md5(salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4));
+    return md5("" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4));
   }
 
   /**
@@ -42,7 +42,7 @@ public class MD5Utils {
    * @return
    */
   public static String formPassToDBPass(String formPass, String salt) {
-    return md5(salt.charAt(0) + salt.charAt(2) + formPass + salt.charAt(5) + salt.charAt(4));
+    return md5("" + salt.charAt(0) + salt.charAt(2) + formPass + salt.charAt(5) + salt.charAt(4));
   }
 
   //后端调用方法
@@ -54,10 +54,10 @@ public class MD5Utils {
 
   //用户端MD5加密是为了防止用户密码在网络中明文传输泄密，服务端MD5加密是为了提高密码安全性起到双重保险
   public static void main(String[] args) {
-    //假设前端输入密为123456,MD5加密之后的密码为ce21b747de5af71ab5c2e20ff0a60eea
+    //假设前端输入密为123456,MD5加密之后的密码为 d3b1294a61a07da9b49b6e22b2cbd7f9
     System.out.println(inputPassToFormPass("123456"));
-    //表单密码 + 自定义盐salt进行第二次加密, 结果为0687f9701bca74827fcefcd7e743d179
-    System.out.println(formPassToDBPass("ce21b747de5af71ab5c2e20ff0a60eea",salt));
+    //表单密码 + 自定义盐salt进行第二次加密, 结果为 68586326b7f2e74df8c0d858cb24647f
+    System.out.println(formPassToDBPass("d3b1294a61a07da9b49b6e22b2cbd7f9",salt));
     //比较结果
     System.out.println(inputPassToDBPass("123456",salt));
   }
