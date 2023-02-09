@@ -51,6 +51,7 @@ public class MD5Utils {
     return dbPass;
   }
 
+  //用户端MD5加密是为了防止用户密码在网络中明文传输泄密，服务端MD5加密是为了提高密码安全性起到双重保险
   public static void main(String[] args) {
     //假设前端输入密为123456,MD5加密之后的密码为ce21b747de5af71ab5c2e20ff0a60eea
     System.out.println(inputPassToFormPass("123456"));
