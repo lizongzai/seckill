@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class MD5Utils {
+public class MD5Util {
 
   //固定Salt
   private static final String salt = "1a2b3c4d";

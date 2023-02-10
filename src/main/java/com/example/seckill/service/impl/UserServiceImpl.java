@@ -5,7 +5,7 @@ import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.mapper.UserMapper;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
-import com.example.seckill.utils.MD5Utils;
+import com.example.seckill.utils.MD5Util;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
@@ -69,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     //判断密码是否正确
-    if (!MD5Utils.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
+    if (!MD5Util.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
       throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
     }
 
