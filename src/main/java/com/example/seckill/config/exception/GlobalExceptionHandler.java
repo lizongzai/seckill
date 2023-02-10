@@ -1,4 +1,4 @@
-package com.example.seckill.config.swagger.exception;
+package com.example.seckill.config.exception;
 
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;

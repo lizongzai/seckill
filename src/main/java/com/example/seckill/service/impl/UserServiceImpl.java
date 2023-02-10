@@ -1,18 +1,16 @@
 package com.example.seckill.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.seckill.config.swagger.exception.GlobalException;
+import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.mapper.UserMapper;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.utils.MD5Utils;
-import com.example.seckill.utils.ValidatorUtil;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * <p>
