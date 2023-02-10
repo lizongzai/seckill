@@ -54,12 +54,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     //根据手机号码获取用户
     User user = userMapper.selectById(mobile);
     if (user == null) {
-      return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+      return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
     }
 
     //判断密码是否正确
     if (!MD5Utils.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
-      return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+      return RespBean.error(RespBeanEnum.PASSWORD_ERROR);
     }
 
     return RespBean.success();

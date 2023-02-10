@@ -37,6 +37,7 @@ public class RespBeanEnum {
   public static RespBeanEnum LOGIN_ERROR = new RespBeanEnum(500210, "用户名或密码不正确");
 
   public static RespBeanEnum USER_NO_LOGIN = new RespBeanEnum(500216, "用户未登录");
+  public static RespBeanEnum USER_NOT_EXIST = new RespBeanEnum(500217, "用户不存在");
   //商品模块 5003XX
   public static RespBeanEnum NO_GOODS = new RespBeanEnum(500100, "没有该商品");
   //订单模块 5004XX
