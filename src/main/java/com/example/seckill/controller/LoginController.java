@@ -5,11 +5,11 @@ import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +49,7 @@ public class LoginController {
   @ApiOperation(value = "登录功能")
   @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
   @ResponseBody
-  public RespBean doLogin(LoginVo loginVo) {
+  public RespBean doLogin(@Valid LoginVo loginVo) {
     return userService.doLogin(loginVo);
   }
 }

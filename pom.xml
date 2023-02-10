@@ -85,6 +85,12 @@
       <version>1.9.6</version>
     </dependency>
 
+    <!--validation 组件-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
