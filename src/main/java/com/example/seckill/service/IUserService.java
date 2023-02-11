@@ -26,4 +26,12 @@ public interface IUserService extends IService<User> {
    * @return
    */
   RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response);
+
+  /**
+   * 根据Cookie获取用户
+   *
+   * @param userTicket
+   * @return
+   */
+  User getUserByCookie(String userTicket,HttpServletRequest request, HttpServletResponse response);
 }

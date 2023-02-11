@@ -14,6 +14,7 @@ import com.example.seckill.vo.RespBeanEnum;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,12 +28,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-
   @Autowired
   private UserMapper userMapper;
+  @Autowired
+  private RedisTemplate redisTemplate;
 
   /**
-   * 登录功能
+   * 描述功能: 登录功能 1.原先用户信息存放在Cookie里面，现在改成放入redis里面
    *
    * @param loginVo
    * @param request
@@ -40,7 +42,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
    * @return
    */
   @Override
-  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
+  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request,
+      HttpServletResponse response) {
 
     //获取手机号码和密码
     String mobile = loginVo.getMobile();
@@ -67,7 +70,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //      return RespBean.error(RespBeanEnum.PASSWORD_ERROR);
 //    }
 
-
     //根据手机号码获取用户
     User user = userMapper.selectById(mobile);
     if (user == null) {
@@ -81,10 +83,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     //生成cookie
     String ticket = UUIDUtil.uuid();
-    request.getSession().setAttribute(ticket,user);    //将ticket和user放入request请求session()
-    CookieUtil.setCookie(request,response,"userTicket",ticket);
-    System.out.println("请求Request = " + request);
+    //将ticket和user放入request请求session() 改成下面redis缓存存储
+    //request.getSession().setAttribute(ticket,user);
+    //将用户信息存入redis中
+    redisTemplate.opsForValue().set("user:" + ticket, user);
+    CookieUtil.setCookie(request, response, "userTicket", ticket);
 
     return RespBean.success();
+  }
+
+  /**
+   * 根据Cookie获取用户
+   *
+   * @param userTicket
+   * @return
+   */
+  @Override
+  public User getUserByCookie(String userTicket, HttpServletRequest request, HttpServletResponse response) {
+
+    //判断userTicke是否为空
+    if (userTicket == null) {
+      return null;
+    }
+
+    //根据userTicket获取用户信息
+    User user = (User) redisTemplate.opsForValue().get("user:" + userTicket);
+    //若用户不为空，但是userTicket为空则重置Cookie
+    if (user != null) {
+      CookieUtil.setCookie(request, response, "userTicket", userTicket);
+    }
+
+    return user;
   }
 }
