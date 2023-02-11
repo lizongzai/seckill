@@ -5,10 +5,14 @@ import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.mapper.UserMapper;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
+import com.example.seckill.utils.CookieUtil;
 import com.example.seckill.utils.MD5Util;
+import com.example.seckill.utils.UUIDUtil;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +35,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
    * 登录功能
    *
    * @param loginVo
+   * @param request
+   * @param response
    * @return
    */
   @Override
-  public RespBean doLogin(LoginVo loginVo) {
+  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
 
     //获取手机号码和密码
     String mobile = loginVo.getMobile();
@@ -73,6 +79,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
       throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
     }
 
+    //生成cookie
+    String ticket = UUIDUtil.uuid();
+    request.getSession().setAttribute(ticket,user);    //将ticket和user放入request请求session()
+    CookieUtil.setCookie(request,response,"userTicket",ticket);
+    System.out.println("请求Request = " + request);
 
     return RespBean.success();
   }
