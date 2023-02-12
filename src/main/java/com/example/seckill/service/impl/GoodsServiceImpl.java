@@ -31,7 +31,18 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
   @Override
   public List<GoodsVO> findGoodsVo() {
     List<GoodsVO> goodsVOList = goodsMapper.findGoodsVo();
-    System.out.println("获取所有商品列表 = " +  goodsVOList);
+    //System.out.println("获取所有商品列表 = " +  goodsVOList);
     return goodsMapper.findGoodsVo();
+  }
+
+  /**
+   * 获取商品详情
+   *
+   * @param goodsId
+   * @return
+   */
+  @Override
+  public GoodsVO findGoodsByGoodsId(Integer goodsId) {
+    return goodsMapper.findGoodsByGoodsId(goodsId);
   }
 }

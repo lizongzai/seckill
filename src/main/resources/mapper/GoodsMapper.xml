@@ -63,5 +63,25 @@
 
   </select>
 
+  <!--  获取商品详情-->
+  <select id="findGoodsByGoodsId" resultMap="SeckillGoodsInfo">
+    select g.id,
+           g.goods_name,
+           g.goods_title,
+           g.goods_img,
+           g.goods_detail,
+           g.goods_price,
+           g.goods_stock,
+           sg.id as sgid,
+           sg.goods_id,
+           sg.seckill_price,
+           sg.stock_count,
+           sg.start_date,
+           sg.end_date
+    from t_goods as g
+           left join t_seckill_goods as sg on g.id = sg.goods_id
+    where g.id = #{goodsId}
+  </select>
+
 
 </mapper>
