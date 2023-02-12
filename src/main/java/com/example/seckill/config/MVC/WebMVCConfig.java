@@ -41,7 +41,6 @@ public class WebMVCConfig implements WebMvcConfigurer {
    */
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
     //url访问路径
     //映射项目中真实路径“/static”,最后面必须加"/"，即可获取当前项目路径
     registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
