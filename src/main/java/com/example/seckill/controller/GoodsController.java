@@ -1,17 +1,15 @@
 package com.example.seckill.controller;
 
+import com.example.seckill.pojo.Goods;
 import com.example.seckill.pojo.User;
+import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import com.example.seckill.vo.GoodsVO;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/goods")
@@ -19,6 +17,8 @@ public class GoodsController {
 
   @Autowired
   private IUserService userService;
+  @Autowired
+  private IGoodsService goodsService;
 
     // 方法一：使用session获取用户登录
     //  /**
@@ -115,6 +115,7 @@ public class GoodsController {
 
     //将添加user用户并传送到前端页面
     model.addAttribute("user", user);
+    model.addAttribute("goodsList",goodsService.findGoodsVo());
     return "goodsList";
   }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -31,5 +32,18 @@ public class WebMVCConfig implements WebMvcConfigurer {
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
     //自定义登录用户参数
     resolvers.add(userHandlerMethodArgumentResolver);
+  }
+
+  /**
+   * 自定义静态资源映射目录
+   *
+   * @param registry
+   */
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+    //url访问路径
+    //映射项目中真实路径“/static”,最后面必须加"/"，即可获取当前项目路径
+    registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
   }
 }
