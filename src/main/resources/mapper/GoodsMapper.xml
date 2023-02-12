@@ -31,15 +31,10 @@
     <result column="goods_detail" property="goods_detail"/>
     <result column="goods_price" property="goods_price"/>
     <result column="goods_stock" property="goods_stock"/>
-
-    <association property="seckillGoods" javaType="com.example.seckill.pojo.SeckillGoods">
-      <id column="sgid" property="id"/>
-      <result column="goods_id" property="goods_id"/>
-      <result column="seckill_price" property="seckill_price"/>
-      <result column="stock_count" property="stock_count"/>
-      <result column="start_date" property="start_date"/>
-      <result column="end_date" property="end_date"/>
-    </association>
+    <result column="seckill_price" property="seckill_price"/>
+    <result column="stock_count" property="stock_count"/>
+    <result column="start_date" property="start_date"/>
+    <result column="end_date" property="end_date"/>
   </resultMap>
 
 
@@ -52,8 +47,6 @@
            g.goods_detail,
            g.goods_price,
            g.goods_stock,
-           sg.id as sgid,
-           sg.goods_id,
            sg.seckill_price,
            sg.stock_count,
            sg.start_date,
@@ -72,8 +65,6 @@
            g.goods_detail,
            g.goods_price,
            g.goods_stock,
-           sg.id as sgid,
-           sg.goods_id,
            sg.seckill_price,
            sg.stock_count,
            sg.start_date,
