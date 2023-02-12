@@ -22,6 +22,11 @@ public class WebMVCConfig implements WebMvcConfigurer {
   @Autowired
   private UserHandlerMethodArgumentResolver userHandlerMethodArgumentResolver;
 
+  /**
+   * Spring MVC的参数解析器，用于添加自定义参数解析器
+   *
+   * @param resolvers
+   */
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
     //自定义登录用户参数

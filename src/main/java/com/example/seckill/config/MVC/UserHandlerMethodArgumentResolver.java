@@ -29,7 +29,8 @@ public class UserHandlerMethodArgumentResolver implements HandlerMethodArgumentR
   private IUserService userService;
 
   /**
-   * 功能描述: 该方法就是对参数条件判断，若条件的结果为true,则执行resolveArgument()方法
+   * 功能描述: 判断是否支持对应的参数类型，即参数是否是User类型
+   * 1. 该方法就是对参数条件判断，若条件的结果为true,则执行resolveArgument()方法
    *
    * @param parameter the method parameter to check
    * @return
