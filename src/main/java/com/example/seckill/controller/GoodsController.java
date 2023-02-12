@@ -1,11 +1,12 @@
 package com.example.seckill.controller;
 
-import com.example.seckill.pojo.Goods;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.vo.GoodsVO;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,8 +129,46 @@ public class GoodsController {
    */
   @RequestMapping("/toDetail/{goodsId}")
   public String toDetails(Model model, User user, @PathVariable Integer goodsId) {
+
+    //添加user用并且传输到前端
     model.addAttribute("user", user);
-    model.addAttribute("goods", goodsService.findGoodsByGoodsId(goodsId));
+
+    //获取秒杀商品信息
+    GoodsVO goodsVO = goodsService.findGoodsByGoodsId(goodsId);
+    model.addAttribute("goods", goodsVO);
+
+    //通过秒杀商品开始和结束时间，判断秒杀状态
+    LocalDateTime start_date = goodsVO.getStart_date();
+    LocalDateTime end_date = goodsVO.getEnd_date();
+    LocalDateTime now_date = LocalDateTime.now();
+
+    //LocalDateTime转Date
+    Date nowDate = Date.from( now_date.atZone( ZoneId.systemDefault()).toInstant());
+    Date startDate = Date.from( start_date.atZone( ZoneId.systemDefault()).toInstant());
+    Date endDate = Date.from( end_date.atZone( ZoneId.systemDefault()).toInstant());
+
+    //秒杀状态
+    int seckillStatus = 0;
+    //秒杀倒计时
+    long remainSeconds = 0;
+
+    if (now_date.isBefore(start_date)) {
+      //秒杀倒计时
+      seckillStatus = 0;
+      remainSeconds = ((startDate.getTime() - nowDate.getTime())/1000);
+      System.out.println("秒杀倒计时 = " + remainSeconds);
+    } else if (now_date.isAfter(end_date)) {
+      //秒杀已经结束
+      seckillStatus = 2;
+      remainSeconds = -1;
+    } else {
+      //秒杀进行中
+      seckillStatus = 1;
+      remainSeconds = 0;
+    }
+    model.addAttribute("seckillStatus", seckillStatus);
+    model.addAttribute("remainSeconds", remainSeconds);
+
     return "goodsDetail";
   }
 }

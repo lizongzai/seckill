@@ -25,7 +25,7 @@
     <tr>
       <td>商品名称</td>
       <td colspan="3" th:text="${goods.goods_name}"
-      td>
+          td>
     </tr>
     <tr>
       <td>商品图片</td>
@@ -33,7 +33,21 @@
     </tr>
     <tr>
       <td>秒杀开始时间</td>
-      <td colspan="3" th:text="${goods.start_date}"></td>
+      <td th:text="${goods.start_date}"></td>
+      <td id="seckillTip">
+        <input type="hidden" id="remainSeconds" th:value="${remainSeconds}">
+        <span th:if="${seckillStatus eq 0}">秒杀倒计时:<span id="countDown" th:text="${remainSeconds}"></span>秒</span>
+        <span th:if="${seckillStatus eq 1}">秒杀进行中:</span>
+        <span th:if="${seckillStatus eq 2}">秒杀已结束:</span>
+      </td>
+
+      <td>
+        <form id="seckillForm" method="post" action="/seckill/doSeckill">
+          <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
+          <input type="hidden" name="goodsId" th:value="${goods.id}"/>
+        </form>
+      </td>
+
     </tr>
     <tr>
       <td>商品原价</td>
@@ -50,6 +64,42 @@
   </table>
 </div>
 </body>
+
+<script>
+  $(function () {
+    countDown();
+  });
+
+  function countDown() {
+
+    var remainSeconds = $("#remainSeconds").val();
+    var timeout;
+
+    //秒杀还没开始，倒计时
+    if (remainSeconds > 0) {
+      $("#buyButton").attr("disabled", true);
+      timeout = setTimeout(function () {
+        $("#countDown").text(remainSeconds - 1);
+        $("#remainSeconds").val(remainSeconds - 1);
+        countDown();
+      }, 1000);
+
+      //秒杀进行中
+    } else if (remainSeconds == 0) {
+      $("#buyButton").attr("disabled", false);
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      $("#seckillTip").html("秒杀进行中");
+
+      //秒杀已经结束
+    } else if (remainSeconds == -1) {
+      $("#buyButton").attr("disabled", true);
+      $("#seckillTip").html("秒杀已经结束");
+    }
+  }
+
+</script>
 
 </html>
 }
