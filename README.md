@@ -40,3 +40,10 @@
   - 使用页面静态化，缓存页面至浏览器，前后端分离降低服务器压力。
   - 使用消息队列完成异步下单，提升用户体验，削峰和降流。
   - 安全性优化：双重MD5密码校验，秒杀接口地址的隐藏，接口限流防刷，数学公式验证码。
+
+![image](https://user-images.githubusercontent.com/49580847/218367567-a1401ad2-de12-49d6-9630-4fffe45b7f91.png)
+
+![image](https://user-images.githubusercontent.com/49580847/218367589-256d2f8f-52eb-41e0-9bc1-f9b076a18016.png)
+
+![image](https://user-images.githubusercontent.com/49580847/218367612-1561126f-d108-45a4-a5fb-a18ba127814c.png)
+
