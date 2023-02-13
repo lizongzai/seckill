@@ -39,12 +39,12 @@ public class RespBeanEnum {
   public static RespBeanEnum USER_NO_LOGIN = new RespBeanEnum(500216, "用户未登录");
   public static RespBeanEnum USER_NOT_EXIST = new RespBeanEnum(500217, "用户不存在");
   //商品模块 5003XX
-  public static RespBeanEnum NO_GOODS = new RespBeanEnum(500100, "没有该商品");
+  public static RespBeanEnum NO_GOODS = new RespBeanEnum(500100, "商品库存不足");
   //订单模块 5004XX
   public static RespBeanEnum ORDER_NOT_EXIST = new RespBeanEnum(500400, "订单不存在");
   //秒杀模块 5005XX
   public static RespBeanEnum MIAO_SHA_OVER = new RespBeanEnum(500500, "商品已经秒杀完毕");
-  public static RespBeanEnum REPEATE_MIAOSHA = new RespBeanEnum(500501, "不能重复秒杀");
+  public static RespBeanEnum REPEATE_MIAOSHA = new RespBeanEnum(500501, "该商品每人限购一件");
   private RespBeanEnum( ) {
   }
 

@@ -128,7 +128,7 @@ public class GoodsController {
    * @return
    */
   @RequestMapping("/toDetail/{goodsId}")
-  public String toDetails(Model model, User user, @PathVariable Integer goodsId) {
+  public String toDetails(Model model, User user, @PathVariable Long goodsId) {
 
     //添加user用并且传输到前端
     model.addAttribute("user", user);

@@ -28,5 +28,5 @@ public interface IGoodsService extends IService<Goods> {
    * @param goodsId
    * @return
    */
-  GoodsVO findGoodsByGoodsId(Integer goodsId);
+  GoodsVO findGoodsByGoodsId(Long goodsId);
 }
