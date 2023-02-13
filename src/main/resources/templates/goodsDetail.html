@@ -24,8 +24,7 @@
   <table class="table" id="goods">
     <tr>
       <td>商品名称</td>
-      <td colspan="3" th:text="${goods.goods_name}"
-          td>
+      <td colspan="3" th:text="${goods.goods_name}" td>
     </tr>
     <tr>
       <td>商品图片</td>
@@ -40,14 +39,12 @@
         <span th:if="${seckillStatus eq 1}">秒杀进行中:</span>
         <span th:if="${seckillStatus eq 2}">秒杀已结束:</span>
       </td>
-
       <td>
         <form id="seckillForm" method="post" action="/seckill/doSeckill">
           <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
           <input type="hidden" name="goodsId" th:value="${goods.id}"/>
         </form>
       </td>
-
     </tr>
     <tr>
       <td>商品原价</td>
@@ -102,5 +99,3 @@
 </script>
 
 </html>
-}
-
