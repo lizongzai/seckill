@@ -11,7 +11,7 @@ import com.example.seckill.service.ISeckillOrderService;
 import com.example.seckill.vo.GoodsVO;
 import com.example.seckill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author lizongzai
  * @since 1.0.0
  */
-@Configuration
+@Controller
 @RequestMapping("/seckill")
 public class SeckillController {
 
@@ -40,7 +40,7 @@ public class SeckillController {
    * @param goodsId
    * @return
    */
-  @RequestMapping("doSeckill")
+  @RequestMapping("/doSeckill")
   public String doSeckill(Model model, User user, Long goodsId) {
 
     //判断用户是否为空，若登录用户为空则跳转到登录页面
@@ -50,16 +50,16 @@ public class SeckillController {
     //添加user用户并传输到前端
     model.addAttribute("user", user);
     GoodsVO goods = goodsService.findGoodsByGoodsId(goodsId);
-
+    System.out.println("添加user用户并传输到前端 = " + goods);
     //判断库存
-    if (goods.getStock_count() < 1) {
+    if (goods.getStockCount() < 1) {
       model.addAttribute("errmsg", RespBeanEnum.NO_GOODS.getMsg());
       return "secKillFail";
     }
 
     //判断是否重复抢购商品
-    SeckillOrder seckillOrder = seckillOrderService.getOne(
-        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+    SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+    System.out.println("判断是否重复抢购商品 = " + seckillOrder);
     if (seckillOrder != null) {
       model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMsg());
       return "secKillFail";
@@ -67,11 +67,13 @@ public class SeckillController {
 
     //秒杀商品(即生成订单)
     Order order = orderService.seckill(user, goods);
+    System.out.println("秒杀商品 = " + order);
     model.addAttribute("user", user);
     model.addAttribute("goods", goods);
+    model.addAttribute("order", order);
 
     //跳转到前端秒杀页面
-    return "doSeckill";
+    return "orderDetail";
 
 
   }

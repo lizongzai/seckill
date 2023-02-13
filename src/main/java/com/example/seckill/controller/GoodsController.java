@@ -4,8 +4,6 @@ import com.example.seckill.pojo.User;
 import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.vo.GoodsVO;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -138,26 +136,21 @@ public class GoodsController {
     model.addAttribute("goods", goodsVO);
 
     //通过秒杀商品开始和结束时间，判断秒杀状态
-    LocalDateTime start_date = goodsVO.getStart_date();
-    LocalDateTime end_date = goodsVO.getEnd_date();
-    LocalDateTime now_date = LocalDateTime.now();
-
-    //LocalDateTime转Date
-    Date nowDate = Date.from( now_date.atZone( ZoneId.systemDefault()).toInstant());
-    Date startDate = Date.from( start_date.atZone( ZoneId.systemDefault()).toInstant());
-    Date endDate = Date.from( end_date.atZone( ZoneId.systemDefault()).toInstant());
+    Date startDate = goodsVO.getStartDate();
+    Date endDate = goodsVO.getEndDate();
+    Date nowDate = new Date();
 
     //秒杀状态
     int seckillStatus = 0;
     //秒杀倒计时
-    long remainSeconds = 0;
+    int remainSeconds = 0;
 
-    if (now_date.isBefore(start_date)) {
+    if (nowDate.before(startDate)) {
       //秒杀倒计时
       seckillStatus = 0;
-      remainSeconds = ((startDate.getTime() - nowDate.getTime())/1000);
+      remainSeconds = (int) ((startDate.getTime() - nowDate.getTime()) / 1000) ;
       System.out.println("秒杀倒计时 = " + remainSeconds);
-    } else if (now_date.isAfter(end_date)) {
+    } else if (nowDate.after(endDate)) {
       //秒杀已经结束
       seckillStatus = 2;
       remainSeconds = -1;

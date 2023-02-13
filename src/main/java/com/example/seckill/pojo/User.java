@@ -40,13 +40,13 @@ public class User implements Serializable {
   private String head;
 
   @ApiModelProperty(value = "注册时间")
-  private LocalDateTime register_date;
+  private LocalDateTime registerDate;
 
   @ApiModelProperty(value = "最后一次登录时间")
-  private LocalDateTime last_login_date;
+  private LocalDateTime lastLoginDate;
 
   @ApiModelProperty(value = "登录次数")
-  private Integer login_count;
+  private Integer loginCount;
 
 
 }

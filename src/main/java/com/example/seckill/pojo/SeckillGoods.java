@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,19 +33,19 @@ public class SeckillGoods implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "商品ID")
-    private Long goods_id;
+    private Long goodsId;
 
     @ApiModelProperty(value = "秒杀价")
-    private BigDecimal seckill_price;
+    private BigDecimal seckillPrice;
 
     @ApiModelProperty(value = "库存数量")
-    private Integer stock_count;
+    private Integer stockCount;
 
     @ApiModelProperty(value = "秒杀开始时间")
-    private LocalDateTime start_date;
+    private Date startDate;
 
     @ApiModelProperty(value = "秒杀结束时间")
-    private LocalDateTime end_date;
+    private Date endDate;
 
 
 }

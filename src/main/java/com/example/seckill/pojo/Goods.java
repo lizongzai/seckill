@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,27 +34,27 @@ public class Goods implements Serializable {
   private Long id;
 
   @ApiModelProperty(value = "商品名称")
-  private String goods_name;
+  private String goodsName;
 
   @ApiModelProperty(value = "商品标题")
-  private String goods_title;
+  private String goodsTitle;
 
   @ApiModelProperty(value = "商品图片")
-  private String goods_img;
+  private String goodsImg;
 
   @ApiModelProperty(value = "商品介绍详情")
-  private String goods_detail;
+  private String goodsDetail;
 
   @ApiModelProperty(value = "商品单价")
-  private BigDecimal goods_price;
+  private BigDecimal goodsPrice;
 
   @ApiModelProperty(value = "商品库存，-1表示没有限制")
-  private Integer goods_stock;
+  private Integer goodsStock;
 
   @ApiModelProperty(value = "商品入库时间")
-  private LocalDateTime create_date;
+  private Date createDate;
 
   @ApiModelProperty(value = "商品更新时间")
-  private LocalDateTime update_date;
+  private Date updateDate;
 
 }

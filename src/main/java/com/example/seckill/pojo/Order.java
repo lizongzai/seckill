@@ -31,33 +31,33 @@ public class Order implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
-    private Long user_id;
+    private Long userId;
 
     @ApiModelProperty(value = "商品id")
-    private Long goods_id;
+    private Long goodsId;
 
     @ApiModelProperty(value = "收货地址id")
-    private Long addr_id;
+    private Long addrId;
 
     @ApiModelProperty(value = "冗余过来的商品名称")
-    private String goods_name;
+    private String goodsName;
 
     @ApiModelProperty(value = "商品数量")
-    private Integer goods_count;
+    private Integer goodsCount;
 
     @ApiModelProperty(value = "商品价格")
-    private BigDecimal goods_price;
+    private BigDecimal goodsPrice;
 
     @ApiModelProperty(value = "支付通道：1 PC、2 Android、3 ios")
-    private Integer order_channel;
+    private Integer orderChannel;
 
     @ApiModelProperty(value = "订单状态：0 未支付，1已支付，2 已发货，3 已收货，4 已退款，‘5 已完成")
     private Integer status;
 
-    private LocalDateTime create_date;
+    private LocalDateTime createDate;
 
     @ApiModelProperty(value = "支付时间")
-    private LocalDateTime pay_date;
+    private LocalDateTime payDate;
 
 
 }

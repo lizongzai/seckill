@@ -59,19 +59,18 @@
   <div class="title"><h2>秒杀商品列表</h2></div>
   <div class="all_seckill_goods">
     <div class="seckill_goods" th:each="goods,goodsStat : ${goodsList}">
-      <h4 th:text="${goods.goods_name}"></h4>
-      <img th:src="@{${goods.goods_img}}" width="250"/>
+      <h4 th:text="${goods.goodsName}"></h4>
+      <img th:src="@{${goods.goodsImg}}" width="250"/>
       <br/><br/>
       <div class="seckill_price">
-        <p th:text="${goods.goods_title}"></p>
+        <p th:text="${goods.goodsTitle}"></p>
         <p>
-          <span class="price1" th:text="${goods.seckill_price}+'元  '"></span>
-          <del><span class="price2" th:text="${goods.goods_price}+'元'"></span></del>
+          <span class="price1" th:text="${goods.seckillPrice}+'元  '"></span>
+          <del><span class="price2" th:text="${goods.goodsPrice}+'元'"></span></del>
         </p>
         <a th:href="'/goods/toDetail/'+${goods.id}">
           <button class="btn btn-default" type="submit">进入详情页...</button>
         </a>
-
       </div>
     </div>
   </div>

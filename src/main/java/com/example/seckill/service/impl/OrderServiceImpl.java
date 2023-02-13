@@ -2,7 +2,9 @@ package com.example.seckill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.seckill.mapper.GoodsMapper;
 import com.example.seckill.mapper.OrderMapper;
+import com.example.seckill.mapper.SeckillGoodsMapper;
 import com.example.seckill.pojo.Order;
 import com.example.seckill.pojo.SeckillGoods;
 import com.example.seckill.pojo.SeckillOrder;
@@ -29,9 +31,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
   @Autowired
   private ISeckillGoodsService seckillGoodsService;
   @Autowired
+  private SeckillGoodsMapper seckillGoodsMapper;
+  @Autowired
   private OrderMapper orderMapper;
   @Autowired
   private ISeckillOrderService seckillOrderService;
+  @Autowired
+  private GoodsMapper goodsMapper;
 
   /**
    * 秒杀商品
@@ -44,29 +50,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
   public Order seckill(User user, GoodsVO goods) {
 
     //秒杀商品表库存减去“1”
-    SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    seckillGoods.setStock_count(seckillGoods.getStock_count() - 1);
+//    SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+    SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+    System.out.println("秒杀商品表库存减去 = " + seckillGoods);
+    seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
     seckillGoodsService.updateById(seckillGoods);
 
     //生成订单
     Order order = new Order();
-    order.setUser_id(user.getId());
-    order.setGoods_id(goods.getId());
-    order.setAddr_id(0L);
-    order.setGoods_name(goods.getGoods_name());
-    order.setGoods_count(1);
-    order.setGoods_price(goods.getSeckill_price());
-    order.setOrder_channel(0);
+    order.setUserId(user.getId());
+    order.setGoodsId(goods.getId());
+    order.setAddrId(0L);
+    order.setGoodsName(goods.getGoodsName());
+    order.setGoodsCount(1);
+    order.setGoodsPrice(goods.getSeckillPrice());
+    order.setOrderChannel(1);
     order.setStatus(0);
-    order.setCreate_date(LocalDateTime.now());
+    order.setCreateDate(LocalDateTime.now());
     orderMapper.insert(order);
+    System.out.println("生成订单 = " + order);
 
     //生成秒杀订单
     SeckillOrder seckillOrder = new SeckillOrder();
-    seckillOrder.setUser_id(user.getId());
-    seckillOrder.setOrder_id(order.getId());
-    seckillOrder.setGoods_id(goods.getId());
+    seckillOrder.setUserId(user.getId());
+    seckillOrder.setOrderId(order.getId());
+    seckillOrder.setGoodsId(goods.getId());
     seckillOrderService.save(seckillOrder);
+    System.out.println("生成秒杀订单" + seckillOrder);
 
     return order;
   }

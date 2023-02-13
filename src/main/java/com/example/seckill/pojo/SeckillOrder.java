@@ -30,13 +30,13 @@ public class SeckillOrder implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户ID")
-    private Long user_id;
+    private Long userId;
 
     @ApiModelProperty(value = "订单ID")
-    private Long order_id;
+    private Long orderId;
 
     @ApiModelProperty(value = "商品ID")
-    private Long goods_id;
+    private Long goodsId;
 
 
 }

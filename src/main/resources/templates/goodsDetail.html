@@ -24,15 +24,15 @@
   <table class="table" id="goods">
     <tr>
       <td>商品名称</td>
-      <td colspan="3" th:text="${goods.goods_name}" td>
+      <td colspan="3" th:text="${goods.goodsName}" td>
     </tr>
     <tr>
       <td>商品图片</td>
-      <td colspan="3"><img th:src="@{${goods.goods_img}}" width="200" height="200"></td>
+      <td colspan="3"><img th:src="@{${goods.goodsImg}}" width="200" height="200"></td>
     </tr>
     <tr>
       <td>秒杀开始时间</td>
-      <td th:text="${goods.start_date}"></td>
+      <td th:text="${goods.startDate}"></td>
       <td id="seckillTip">
         <input type="hidden" id="remainSeconds" th:value="${remainSeconds}">
         <span th:if="${seckillStatus eq 0}">秒杀倒计时:<span id="countDown" th:text="${remainSeconds}"></span>秒</span>
@@ -48,15 +48,15 @@
     </tr>
     <tr>
       <td>商品原价</td>
-      <td colspan="3" th:text="${goods.goods_price}"></td>
+      <td colspan="3" th:text="${goods.goodsPrice}"></td>
     </tr>
     <tr>
       <td>秒杀价</td>
-      <td colspan="3" th:text="${goods.seckill_price}"></td>
+      <td colspan="3" th:text="${goods.seckillPrice}"></td>
     </tr>
     <tr>
       <td>库存数量</td>
-      <td colspan="3" th:text="${goods.stock_count}"></td>
+      <td colspan="3" th:text="${goods.stockCount}"></td>
     </tr>
   </table>
 </div>

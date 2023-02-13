@@ -39,7 +39,7 @@
 
 
   <!-- 获取所有秒杀商品详情-->
-  <select id="findGoodsVo" resultMap="SeckillGoodsInfo">
+  <select id="findGoodsVo" resultType="com.example.seckill.vo.GoodsVO">
     select g.id,
            g.goods_name,
            g.goods_title,
@@ -57,7 +57,7 @@
   </select>
 
   <!--  获取商品详情-->
-  <select id="findGoodsByGoodsId" resultMap="SeckillGoodsInfo">
+  <select id="findGoodsByGoodsId" resultType="com.example.seckill.vo.GoodsVO">
     select g.id,
            g.goods_name,
            g.goods_title,

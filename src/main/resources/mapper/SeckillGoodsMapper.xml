@@ -17,4 +17,5 @@
         id, goods_id, seckill_price, stock_count, start_date, end_date
     </sql>
 
+
 </mapper>
