@@ -7,9 +7,10 @@
 - 前端
   - Thyemeleaf
   - Bootstrap
-  - J query
+  - JQuery
 - 后端
   - Spring Boot
+  - Docker
   - MySQL
   - MyBatis Plus
   - Lombok
