@@ -33,7 +33,11 @@ public class SeckillController {
   private IOrderService orderService;
 
   /**
-   * 秒杀商品
+   * 功能描述:秒杀商品
+   * 1.判断用户是否为空，若登录用户为空则跳转到登录页面
+   * 2.判断库存是否足够，库存不足无法参与秒杀活动
+   * 3.判断是否重复抢购商品即该商品每人限购一件
+   * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
    *
    * @param model
    * @param user
@@ -47,11 +51,13 @@ public class SeckillController {
     if (user == null) {
       return "login";
     }
+
     //添加user用户并传输到前端
     model.addAttribute("user", user);
+
     GoodsVO goods = goodsService.findGoodsByGoodsId(goodsId);
-    System.out.println("添加user用户并传输到前端 = " + goods);
-    //判断库存
+    //System.out.println("添加user用户并传输到前端 = " + goods);
+    //判断库存是否足够
     if (goods.getStockCount() < 1) {
       model.addAttribute("errmsg", RespBeanEnum.NO_GOODS.getMsg());
       return "secKillFail";
@@ -59,7 +65,7 @@ public class SeckillController {
 
     //判断是否重复抢购商品
     SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
-    System.out.println("判断是否重复抢购商品 = " + seckillOrder);
+    //System.out.println("判断是否重复抢购商品 = " + seckillOrder);
     if (seckillOrder != null) {
       model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMsg());
       return "secKillFail";
@@ -67,15 +73,12 @@ public class SeckillController {
 
     //秒杀商品(即生成订单)
     Order order = orderService.seckill(user, goods);
-    System.out.println("秒杀商品 = " + order);
+    //System.out.println("秒杀商品 = " + order);
     model.addAttribute("user", user);
     model.addAttribute("goods", goods);
     model.addAttribute("order", order);
 
     //跳转到前端秒杀页面
     return "orderDetail";
-
-
   }
-
 }

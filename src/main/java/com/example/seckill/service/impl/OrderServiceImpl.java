@@ -50,9 +50,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
   public Order seckill(User user, GoodsVO goods) {
 
     //秒杀商品表库存减去“1”
-//    SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+    //SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
     SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    System.out.println("秒杀商品表库存减去 = " + seckillGoods);
+    //System.out.println("秒杀商品表库存减去 = " + seckillGoods);
     seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
     seckillGoodsService.updateById(seckillGoods);
 
@@ -68,7 +68,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     order.setStatus(0);
     order.setCreateDate(LocalDateTime.now());
     orderMapper.insert(order);
-    System.out.println("生成订单 = " + order);
+    //System.out.println("生成订单 = " + order);
 
     //生成秒杀订单
     SeckillOrder seckillOrder = new SeckillOrder();
@@ -76,7 +76,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     seckillOrder.setOrderId(order.getId());
     seckillOrder.setGoodsId(goods.getId());
     seckillOrderService.save(seckillOrder);
-    System.out.println("生成秒杀订单" + seckillOrder);
+    //System.out.println("生成秒杀订单" + seckillOrder);
 
     return order;
   }
