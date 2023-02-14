@@ -8,11 +8,13 @@ import com.example.seckill.service.IUserService;
 import com.example.seckill.utils.CookieUtil;
 import com.example.seckill.utils.MD5Util;
 import com.example.seckill.utils.UUIDUtil;
+import com.example.seckill.utils.ValidatorUtil;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -58,15 +60,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //    if (!ValidatorUtil.isMobile(mobile)) {
 //      return RespBean.error(RespBeanEnum.MOBILE_ERROR);
 //    }
-
+//
 //    //根据手机号码获取用户
 //    User user = userMapper.selectById(mobile);
 //    if (user == null) {
 //      return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
 //    }
-
+//
 //    //判断密码是否正确
-//    if (!MD5Utils.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
+//    if (!MD5Util.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
 //      return RespBean.error(RespBeanEnum.PASSWORD_ERROR);
 //    }
 
