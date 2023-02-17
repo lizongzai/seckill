@@ -35,6 +35,6 @@ public class GlobalExceptionHandler {
     }
 
     //服务端异常
-    return RespBean.error(RespBeanEnum.SERVER_ERROR);
+    return RespBean.error(RespBeanEnum.ERROR);
   }
 }

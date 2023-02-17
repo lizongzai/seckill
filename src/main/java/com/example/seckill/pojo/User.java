@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -40,10 +41,10 @@ public class User implements Serializable {
   private String head;
 
   @ApiModelProperty(value = "注册时间")
-  private LocalDateTime registerDate;
+  private Date registerDate;
 
   @ApiModelProperty(value = "最后一次登录时间")
-  private LocalDateTime lastLoginDate;
+  private Date lastLoginDate;
 
   @ApiModelProperty(value = "登录次数")
   private Integer loginCount;

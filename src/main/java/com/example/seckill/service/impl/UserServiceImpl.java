@@ -44,8 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
    * @return
    */
   @Override
-  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request,
-      HttpServletResponse response) {
+  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
 
     //获取手机号码和密码
     String mobile = loginVo.getMobile();
@@ -90,8 +89,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     //将用户信息存入redis中
     redisTemplate.opsForValue().set("user:" + ticket, user);
     CookieUtil.setCookie(request, response, "userTicket", ticket);
-
-    return RespBean.success();
+    System.out.println("用户登录 uesrTicket = " + ticket);
+    return RespBean.success(ticket);
   }
 
   /**

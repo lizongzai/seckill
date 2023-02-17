@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @since 1.0.0
  */
 @Controller
-@Api(tags = "LoginController")
 @RequestMapping("/login")
 @Slf4j
 public class LoginController {
@@ -36,8 +35,7 @@ public class LoginController {
    *
    * @return
    */
-  @ApiOperation(value = "跳转登录页面")
-  @RequestMapping(value = "/toLogin", method = RequestMethod.GET)
+  @RequestMapping("/toLogin")
   public String toLogin() {
     return "login";
   }
@@ -48,10 +46,9 @@ public class LoginController {
    * @param loginVo
    * @return
    */
-  @ApiOperation(value = "登录功能")
-  @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
+  @RequestMapping("/doLogin")
   @ResponseBody
   public RespBean doLogin(@Valid LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
-    return userService.doLogin(loginVo,request,response);
+    return userService.doLogin(loginVo, request, response);
   }
 }

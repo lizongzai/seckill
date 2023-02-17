@@ -59,7 +59,7 @@ public class SeckillController {
     //System.out.println("添加user用户并传输到前端 = " + goods);
     //判断库存是否足够
     if (goods.getStockCount() < 1) {
-      model.addAttribute("errmsg", RespBeanEnum.NO_GOODS.getMsg());
+      model.addAttribute("errmsg", RespBeanEnum.NO_GOODS.getMessage());
       return "secKillFail";
     }
 
@@ -67,7 +67,7 @@ public class SeckillController {
     SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
     //System.out.println("判断是否重复抢购商品 = " + seckillOrder);
     if (seckillOrder != null) {
-      model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMsg());
+      model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMessage());
       return "secKillFail";
     }
 

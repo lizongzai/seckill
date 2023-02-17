@@ -1,8 +1,74 @@
+//package com.example.seckill.vo;
+//
+//import lombok.AllArgsConstructor;
+//import lombok.Data;
+//import lombok.NoArgsConstructor;
+//
+///**
+// * 公共返回对象
+// *
+// * @author lizongzai
+// * @since 1.0.0
+// */
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//public class RespBean {
+//
+//  //状态码
+//  private long code;
+//  //返回消息
+//  private String message;
+//  //返回对象
+//  private Object object;
+//
+//  /**
+//   * 成功返回结果
+//   *
+//   * @return
+//   */
+//  public static RespBean success() {
+//    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMsg(), null);
+//  }
+//
+//  /**
+//   * 成功返回结果
+//   *
+//   * @return
+//   */
+//  public static RespBean success(Object object) {
+//    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMsg(), object);
+//  }
+//
+//  /**
+//   * 失败返回结果
+//   *
+//   * @param respBeanEnum
+//   * @return
+//   */
+//  public static RespBean error(RespBeanEnum respBeanEnum) {
+//    return new RespBean(respBeanEnum.getCode(), respBeanEnum.getMsg(), null);
+//  }
+//
+//  /**
+//   * 失败返回结果
+//   *
+//   * @param respBeanEnum
+//   * @return
+//   */
+//  public static RespBean error(RespBeanEnum respBeanEnum, Object object) {
+//    return new RespBean(respBeanEnum.getCode(),respBeanEnum.getMsg(),object);
+//  }
+//
+//}
+
+
 package com.example.seckill.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 /**
  * 公共返回对象
@@ -11,8 +77,8 @@ import lombok.NoArgsConstructor;
  * @since 1.0.0
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RespBean {
 
   //状态码
@@ -20,24 +86,22 @@ public class RespBean {
   //返回消息
   private String message;
   //返回对象
-  private Object object;
+  private Object obj;
 
   /**
    * 成功返回结果
-   *
-   * @return
    */
   public static RespBean success() {
-    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMsg(), null);
+    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMessage(), null);
   }
 
   /**
    * 成功返回结果
    *
-   * @return
+   * @param obj
    */
-  public static RespBean success(Object object) {
-    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMsg(), object);
+  public static RespBean success(Object obj) {
+    return new RespBean(RespBeanEnum.SUCCESS.getCode(), RespBeanEnum.SUCCESS.getMessage(), obj);
   }
 
   /**
@@ -47,17 +111,6 @@ public class RespBean {
    * @return
    */
   public static RespBean error(RespBeanEnum respBeanEnum) {
-    return new RespBean(respBeanEnum.getCode(), respBeanEnum.getMsg(), null);
+    return new RespBean(respBeanEnum.getCode(), respBeanEnum.getMessage(), null);
   }
-
-  /**
-   * 失败返回结果
-   *
-   * @param respBeanEnum
-   * @return
-   */
-  public static RespBean error(RespBeanEnum respBeanEnum, Object object) {
-    return new RespBean(respBeanEnum.getCode(),respBeanEnum.getMsg(),object);
-  }
-
 }
