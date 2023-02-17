@@ -5,11 +5,22 @@ import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.vo.GoodsVO;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
 
 @Controller
 @RequestMapping(value = "/goods")
@@ -19,6 +30,10 @@ public class GoodsController {
   private IUserService userService;
   @Autowired
   private IGoodsService goodsService;
+  @Autowired
+  private RedisTemplate redisTemplate;
+  @Autowired
+  private ThymeleafViewResolver thymeleafViewResolver;
 
   // 方法一：使用session获取用户登录
   //  /**
@@ -84,8 +99,40 @@ public class GoodsController {
   //    model.addAttribute("user", user);
   //    return "goodsList";
   //  }
+  //
+  //  //方法三:自定义判断登录用户参数
+  //
+  //  /**
+  //   * 功能描述: 商品 1.通过session里面的ticket获取登录用户信息,改成通过cookie获取用户信息 2.添加user用户并传送到前端页面.
+  //   *
+  //   * @param model
+  //   * @param user
+  //   * @return
+  //   */
+  //  @RequestMapping("/toList")
+  //  public String toList(Model model, User user) {
+  //
+  //    //    //判断ticket是否为空, 若ticket为空则跳转到login登录页面
+  //    //    if (StringUtils.isEmpty(ticket)) {
+  //    //      return "login";
+  //    //    }
+  //    //
+  //    //    //通过session里面的ticket获取登录用户,若用户为空则跳转到Login登录页面
+  //    //    //User user = (User) session.getAttribute(ticket);
+  //    //
+  //    //    //将session改成从cookie获取用户
+  //    //    User user = userService.getUserByCookie(ticket, request, response);
+  //    //    if (user == null) {
+  //    //      return "login";
+  //    //    }
+  //
+  //    //将添加user用户并传送到前端页面
+  //    model.addAttribute("user", user);
+  //    model.addAttribute("goodsList", goodsService.findGoodsVo());
+  //    return "goodsList";
+  //  }
 
-  //方法三:自定义判断登录用户参数
+  //方法四:基于自定义判断登录用户参数继承上,使用redis缓存数据库使页面缓存效果
 
   /**
    * 功能描述: 商品 1.通过session里面的ticket获取登录用户信息,改成通过cookie获取用户信息 2.添加user用户并传送到前端页面.
@@ -94,8 +141,10 @@ public class GoodsController {
    * @param user
    * @return
    */
-  @RequestMapping("/toList")
-  public String toList(Model model, User user) {
+  @RequestMapping(value = "/toList", produces = "text/html;charset=utf-8")
+  @ResponseBody
+  public String toList(Model model, User user, HttpServletRequest request,
+      HttpServletResponse response) {
 
     //    //判断ticket是否为空, 若ticket为空则跳转到login登录页面
     //    if (StringUtils.isEmpty(ticket)) {
@@ -111,10 +160,26 @@ public class GoodsController {
     //      return "login";
     //    }
 
+    //从Redis缓存中获取页面,若页面不为空,则直接返回结果
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+    String html = (String) valueOperations.get("goodsList");
+    if (!StringUtils.isEmpty(html)) {
+      return html;
+    }
+
     //将添加user用户并传送到前端页面
     model.addAttribute("user", user);
     model.addAttribute("goodsList", goodsService.findGoodsVo());
-    return "goodsList";
+
+    //若页面为空, 手动渲染html并存入reids缓存
+    WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
+    html = thymeleafViewResolver.getTemplateEngine().process("goodsList", webContext);
+    if (!StringUtils.isEmpty(html)) {
+      //html页面保存在redis为60秒
+      valueOperations.set("goodsList", html, 60, TimeUnit.SECONDS);
+    }
+
+    return html;
   }
 
   /**
@@ -125,8 +190,16 @@ public class GoodsController {
    * @param goodsId
    * @return
    */
-  @RequestMapping("/toDetail/{goodsId}")
-  public String toDetails(Model model, User user, @PathVariable Long goodsId) {
+  @RequestMapping(value = "/toDetail/{goodsId}",produces = "text/html;charset=utf-8")
+  @ResponseBody
+  public String toDetails(Model model, User user, @PathVariable Long goodsId,
+      HttpServletRequest request, HttpServletResponse response) {
+    //从Redis缓存中后去页面,若商品页面不为空, 则直接返回页面
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+    String html = (String) valueOperations.get("goodsDetail:" + goodsId);
+    if (!StringUtils.isEmpty(html)) {
+      return html;
+    }
 
     //添加user用并且传输到前端
     model.addAttribute("user", user);
@@ -148,7 +221,7 @@ public class GoodsController {
     if (nowDate.before(startDate)) {
       //秒杀倒计时
       seckillStatus = 0;
-      remainSeconds = (int) ((startDate.getTime() - nowDate.getTime()) / 1000) ;
+      remainSeconds = (int) ((startDate.getTime() - nowDate.getTime()) / 1000);
       System.out.println("秒杀倒计时 = " + remainSeconds);
     } else if (nowDate.after(endDate)) {
       //秒杀已经结束
@@ -162,6 +235,13 @@ public class GoodsController {
     model.addAttribute("seckillStatus", seckillStatus);
     model.addAttribute("remainSeconds", remainSeconds);
 
-    return "goodsDetail";
+    //若商品页面为空, 手动渲染商品html并存入reids缓存
+    WebContext webContext = new WebContext(request,response,request.getServletContext(),request.getLocale(),model.asMap());
+    html = thymeleafViewResolver.getTemplateEngine().process("goodsDetail",webContext);
+    if (!StringUtils.isEmpty(html)){
+      valueOperations.set("goodsDetail:" + goodsId,html,60,TimeUnit.SECONDS);
+    }
+
+    return html;
   }
 }
