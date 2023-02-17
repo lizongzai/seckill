@@ -8,15 +8,14 @@ import com.example.seckill.service.IUserService;
 import com.example.seckill.utils.CookieUtil;
 import com.example.seckill.utils.MD5Util;
 import com.example.seckill.utils.UUIDUtil;
-import com.example.seckill.utils.ValidatorUtil;
 import com.example.seckill.vo.LoginVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,7 +43,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
    * @return
    */
   @Override
-  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
+  public RespBean doLogin(LoginVo loginVo, HttpServletRequest request,
+      HttpServletResponse response) {
 
     //获取手机号码和密码
     String mobile = loginVo.getMobile();
@@ -100,7 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
    * @return
    */
   @Override
-  public User getUserByCookie(String userTicket, HttpServletRequest request, HttpServletResponse response) {
+  public User getUserByCookie(String userTicket, HttpServletRequest request,
+      HttpServletResponse response) {
 
     //判断userTicke是否为空
     if (userTicket == null) {
@@ -115,5 +116,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     return user;
+  }
+
+
+  /**
+   * 更新密码
+   *
+   * @param userTicket
+   * @param password
+   * @param request
+   * @param response
+   * @return
+   */
+  @Override
+  public RespBean updatePassword(String userTicket, String password, HttpServletRequest request,
+      HttpServletResponse response) {
+
+    //获取用户信息
+    User user = getUserByCookie(userTicket, request, response);
+    if (user == null) {
+      return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
+    }
+
+    //更新密码
+    user.setPassword(MD5Util.inputPassToDBPass(password,user.getSalt()));
+    int result = userMapper.updateById(user);
+    if (1 == result) {
+      //删除redis缓存中的userTicket
+      redisTemplate.delete("user:" + userTicket);
+      return RespBean.success();
+    }
+
+    return RespBean.error(RespBeanEnum.PASSWORD_UPDATE_FAIL);
   }
 }
