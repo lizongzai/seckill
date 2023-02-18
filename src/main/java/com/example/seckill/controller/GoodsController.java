@@ -3,7 +3,9 @@ package com.example.seckill.controller;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
+import com.example.seckill.vo.DetailVo;
 import com.example.seckill.vo.GoodsVO;
+import com.example.seckill.vo.RespBean;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
@@ -190,9 +192,9 @@ public class GoodsController {
    * @param goodsId
    * @return
    */
-  @RequestMapping(value = "/toDetail/{goodsId}",produces = "text/html;charset=utf-8")
+  @RequestMapping(value = "/toDetail2/{goodsId}",produces = "text/html;charset=utf-8")
   @ResponseBody
-  public String toDetails(Model model, User user, @PathVariable Long goodsId,
+  public String toDetails2(Model model, User user, @PathVariable Long goodsId,
       HttpServletRequest request, HttpServletResponse response) {
     //从Redis缓存中后去页面,若商品页面不为空, 则直接返回页面
     ValueOperations valueOperations = redisTemplate.opsForValue();
@@ -244,4 +246,58 @@ public class GoodsController {
 
     return html;
   }
+
+
+
+  /**
+   * 跳转商品详情
+   *
+   * @param model
+   * @param user
+   * @param goodsId
+   * @return
+   */
+  @RequestMapping("/detail/{goodsId}")
+  @ResponseBody
+  public RespBean detail(Model model, User user, @PathVariable Long goodsId) {
+
+    //获取秒杀商品信息
+    GoodsVO goodsVO = goodsService.findGoodsByGoodsId(goodsId);
+    //通过秒杀商品开始和结束时间，判断秒杀状态
+    Date startDate = goodsVO.getStartDate();
+    Date endDate = goodsVO.getEndDate();
+    Date nowDate = new Date();
+
+    //秒杀状态
+    int seckillStatus = 0;
+    //秒杀倒计时
+    int remainSeconds = 0;
+
+    if (nowDate.before(startDate)) {
+      //秒杀倒计时
+      seckillStatus = 0;
+      remainSeconds = (int) ((startDate.getTime() - nowDate.getTime()) / 1000);
+      System.out.println("秒杀倒计时 = " + remainSeconds);
+    } else if (nowDate.after(endDate)) {
+      //秒杀已经结束
+      seckillStatus = 2;
+      remainSeconds = -1;
+    } else {
+      //秒杀进行中
+      seckillStatus = 1;
+      remainSeconds = 0;
+    }
+
+    DetailVo detailVo = new DetailVo();
+    detailVo.setUser(user);
+    detailVo.setGoodsVO(goodsVO);
+    detailVo.setSeckillStatus(seckillStatus);
+    detailVo.setRemainSeconds(remainSeconds);
+    System.out.println("aaaaaaaaaaaa = " + detailVo);
+
+    return RespBean.success(detailVo);
+  }
+
+
+
 }

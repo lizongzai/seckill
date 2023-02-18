@@ -40,6 +40,57 @@
 <!--</html>-->
 
 
+<!--<!DOCTYPE HTML>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <title>商品列表</title>-->
+<!--  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
+<!--  &lt;!&ndash; jquery &ndash;&gt;-->
+<!--  <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>-->
+<!--  &lt;!&ndash; bootstrap &ndash;&gt;-->
+<!--  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}"/>-->
+<!--  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>-->
+
+<!--  <link rel="stylesheet" type="text/css" th:href="@{/css/goods.css}"/>-->
+
+<!--</head>-->
+<!--<body>-->
+<!--<div class="seckill_content">-->
+<!--  <div class="title"><h2>秒杀商品列表</h2></div>-->
+<!--  <div class="all_seckill_goods">-->
+<!--    <div class="seckill_goods" th:each="goods,goodsStat : ${goodsList}">-->
+<!--      <h4 th:text="${goods.goodsName}"></h4>-->
+<!--      <img th:src="@{${goods.goodsImg}}" width="250"/>-->
+<!--      <br/><br/>-->
+<!--      <div class="seckill_price">-->
+<!--        <p th:text="${goods.goodsTitle}"></p>-->
+<!--        <p>-->
+<!--          <span class="price1" th:text="${goods.seckillPrice}+'元  '"></span>-->
+<!--          <del><span class="price2" th:text="${goods.goodsPrice}+'元'"></span></del>-->
+<!--        </p>-->
+<!--        <a th:href="'/goods/toDetail/'+${goods.id}">-->
+<!--          <button class="btn btn-default" type="submit">进入详情页...</button>-->
+<!--        </a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--</div>-->
+<!--</body>-->
+<!--&lt;!&ndash; jquery-validator &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>-->
+<!--<script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>-->
+<!--&lt;!&ndash; layer &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/layer/layer.js}"></script>-->
+<!--&lt;!&ndash; md5.js &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/js/md5.min.js}"></script>-->
+<!--&lt;!&ndash; common.js &ndash;&gt;-->
+<!--<script type="text/javascript" th:src="@{/js/common.js}"></script>-->
+<!--</html>-->
+
+
+
+
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -68,7 +119,7 @@
           <span class="price1" th:text="${goods.seckillPrice}+'元  '"></span>
           <del><span class="price2" th:text="${goods.goodsPrice}+'元'"></span></del>
         </p>
-        <a th:href="'/goods/toDetail/'+${goods.id}">
+        <a th:href="'/goods_detail.html?goodsId='+${goods.id}">
           <button class="btn btn-default" type="submit">进入详情页...</button>
         </a>
       </div>
