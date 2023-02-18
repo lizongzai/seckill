@@ -81,7 +81,7 @@
   //     success:function(data){
   //       if(data.code === 0){
   //         var path = data.data;
-  //         doMiaosha(path);
+  //         doSeckill(path);
   //       } else if(data.code === 500216){
   //         layer.confirm("未登录是否去登录！！！", {btn: ["确定", "取消"]},
   //             function () {
@@ -136,7 +136,7 @@
   //   });
   // }
 
-  // function doMiaosha(path) {
+  // function doSeckill(path) {
   //   $.ajax({
   //         url: "/seckill/"+path+"/seckill",
   //         type: "POST",
@@ -144,8 +144,8 @@
   //           goodsId: $("#goodsId").val(),
   //         },
   //         success: function (data) {
-  //           if (data.code == 0) {
-  //             //window.location.href="/order_detail.htm?orderId="+data.data.id;
+  //           if (data.code == 200) {
+  //             //window.location.href="/order_detail.htm?orderId="+data.obj.id;
   //             getMiaoshaResult($("#goodsId").val());
   //           } else if (data.code == 500216) {
   //             layer.confirm(data.msg, {btn: ["确定", "取消"]},

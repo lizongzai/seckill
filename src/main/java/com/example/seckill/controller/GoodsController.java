@@ -288,12 +288,12 @@ public class GoodsController {
       remainSeconds = 0;
     }
 
+    //商品详情公共返回对象,仅供前端展现使用
     DetailVo detailVo = new DetailVo();
     detailVo.setUser(user);
     detailVo.setGoodsVO(goodsVO);
     detailVo.setSeckillStatus(seckillStatus);
     detailVo.setRemainSeconds(remainSeconds);
-    System.out.println("aaaaaaaaaaaa = " + detailVo);
 
     return RespBean.success(detailVo);
   }

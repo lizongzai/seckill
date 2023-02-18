@@ -61,6 +61,36 @@
 </body>
 </html>
 <script>
+
+    $(function(){
+        //获取订单详情
+        getOrderDetail();
+    })
+
+    function getOrderDetail(){
+        var orderId = g_getQueryString("orderId");
+        $.ajax({
+            url:"/order/detail",
+            type:"GET",
+            data:{
+                orderId:orderId
+            },
+            success:function(data){
+                if(data.code == 200){
+                    render(data.obj);
+                }else if(data.code == 500216){
+                    layer.msg(data.message);
+                    window.location.href = "/page/login";
+                }else{
+                    layer.msg(data.message);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+
     function render(detail){
         var goods = detail.goods;
         var order = detail.order;
@@ -78,33 +108,5 @@
 
     }
 
-    $(function(){
-        getOrderDetail();
-    })
-
-    function getOrderDetail(){
-        var orderId = g_getQueryString("orderId");
-        $.ajax({
-            url:"/order/detail",
-            type:"GET",
-            data:{
-                orderId:orderId
-            },
-            success:function(data){
-                if(data.code == 0){
-                    render(data.data);
-                }else if(data.code == 500216){
-                    layer.msg(data.msg);
-                    window.location.href = "/page/login";
-                }else{
-                    layer.msg(data.msg);
-                }
-
-            },
-            error:function(){
-                layer.msg("客户端请求有误");
-            }
-        });
-    }
 </script>
 </html>
