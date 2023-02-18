@@ -239,7 +239,7 @@
       $("#seckillTip").html("秒杀进行中");
 
       //秒杀已经结束
-    } else {
+    } else if (remainSeconds == -1){
       $("#buyButton").attr("disabled", true);
       $("#seckillTip").html("秒杀已经结束");
     }
