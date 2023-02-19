@@ -55,6 +55,27 @@ spring:
         #最小空闲连接
         min-idle: 5
 
+  #静态资源配置
+  web:
+    resources:
+      #启动默认静态资源,默认启动
+      add-mappings: true
+      cache:
+        cachecontrol:
+          #缓存相应处理时间
+          max-age: 3600
+      chain:
+        #资源链启动缓存,默认启动
+        cache: true
+        #启动资源链,默认禁用
+        enabled: true
+        #启动压缩资源(gzip,brotli)解析,默认禁用
+        compressed: true
+        #启动h5应用缓存,默认禁用
+        html-applciation-cache: truec
+      #配置静态资源目录
+      static-locations: classpath:/static/
+
 # Mybatis-plus配置
 mybatis-plus:
   # 配置Mapper.xml映射文件

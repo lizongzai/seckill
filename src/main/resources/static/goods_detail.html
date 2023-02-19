@@ -49,7 +49,7 @@
         <span id="stockCount"></span>
       </div>
 
-      <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
+      <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="doSeckill()">立即秒杀</button>
       <input type="hidden" name="goodsId" id="goodsId"/>
     </div>
   </div>
@@ -120,7 +120,7 @@
   //         } else {
   //           layer.confirm("恭喜你，秒杀成功！查看订单？", {btn: ["确定", "取消"]},
   //               function () {
-  //                 window.location.href = "/order_detail.htm?orderId=" + result;
+  //                 window.location.href = "/order_detail.html?orderId=" + result;
   //               },
   //               function () {
   //                 layer.closeAll();
@@ -136,39 +136,36 @@
   //   });
   // }
 
-  // function doSeckill(path) {
-  //   $.ajax({
-  //         url: "/seckill/"+path+"/seckill",
-  //         type: "POST",
-  //         data: {
-  //           goodsId: $("#goodsId").val(),
-  //         },
-  //         success: function (data) {
-  //           if (data.code == 200) {
-  //             //window.location.href="/order_detail.htm?orderId="+data.obj.id;
-  //             getMiaoshaResult($("#goodsId").val());
-  //           } else if (data.code == 500216) {
-  //             layer.confirm(data.msg, {btn: ["确定", "取消"]},
-  //                 function () {
-  //                   window.location.href = "/page/login";
-  //                 },
-  //                 function () {
-  //                   layer.closeAll();
-  //                 });
-  //           } else {
-  //             layer.msg(data.msg);
-  //           }
-  //         },
-  //         error: function () {
-  //           layer.msg("客户端请求有误");
-  //         }
-  //       }
-  //   )
-  //   ;
-  //
-  // }
+  function doSeckill() {
+    $.ajax({
+          url: "/seckill/doSeckill",
+          type: "POST",
+          data: {
+            goodsId: $("#goodsId").val(),
+          },
+          success: function (data) {
+            if (data.code == 200) {
+              window.location.href="/order_detail.html?orderId="+data.obj.id;
+              // getMiaoshaResult($("#goodsId").val());
+              // } else if (data.code == 500216) {
+              //   layer.confirm(data.message, {btn: ["确定", "取消"]},
+              //       function () {
+              //         window.location.href = "/page/login";
+              //       },
+              //       function () {
+              //         layer.closeAll();
+              //       });
+            } else {
+              layer.msg(data.message);
+            }
+          },
+          error: function () {
+            layer.msg("客户端请求有误");
+          }
+        }
+    );
 
-
+  }
 
   $(function () {
     //countDown();

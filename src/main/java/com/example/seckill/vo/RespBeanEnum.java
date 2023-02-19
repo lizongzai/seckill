@@ -106,9 +106,11 @@ public enum RespBeanEnum {
   NO_GOODS(500100, "商品库存不足"),
 
   PASSWORD_ERROR(500215, "密码错误"),
-  PASSWORD_UPDATE_FAIL(500216, "密码更新失败"),
+  PASSWORD_UPDATE_FAIL(500214, "密码更新失败"),
+  USER_NO_LOGIN(500216, "用户未登录"),
   USER_NOT_EXIST(500217, "用户不存在"),
-  LOGIN_ERROR(500210, "用户名或密码不正确");
+  LOGIN_ERROR(500210, "用户名或密码不正确"),
+  ORDER_NOT_EXIST(500400, "订单不存在");
 
   private final Integer code;
   private final String message;

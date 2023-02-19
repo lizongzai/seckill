@@ -9,11 +9,14 @@ import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IOrderService;
 import com.example.seckill.service.ISeckillOrderService;
 import com.example.seckill.vo.GoodsVO;
+import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 秒杀商品接口
@@ -33,10 +36,7 @@ public class SeckillController {
   private IOrderService orderService;
 
   /**
-   * 功能描述:秒杀商品
-   * 1.判断用户是否为空，若登录用户为空则跳转到登录页面
-   * 2.判断库存是否足够，库存不足无法参与秒杀活动
-   * 3.判断是否重复抢购商品即该商品每人限购一件
+   * 功能描述:秒杀商品 1.判断用户是否为空，若登录用户为空则跳转到登录页面 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
    * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
    *
    * @param model
@@ -44,8 +44,8 @@ public class SeckillController {
    * @param goodsId
    * @return
    */
-  @RequestMapping("/doSeckill")
-  public String doSeckill(Model model, User user, Long goodsId) {
+  @RequestMapping("/doSeckill2")
+  public String doSeckill2(Model model, User user, Long goodsId) {
 
     //判断用户是否为空，若登录用户为空则跳转到登录页面
     if (user == null) {
@@ -64,7 +64,8 @@ public class SeckillController {
     }
 
     //判断是否重复抢购商品
-    SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+    SeckillOrder seckillOrder = seckillOrderService.getOne(
+        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
     //System.out.println("判断是否重复抢购商品 = " + seckillOrder);
     if (seckillOrder != null) {
       model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMessage());
@@ -81,4 +82,43 @@ public class SeckillController {
     //跳转到前端秒杀页面
     return "orderDetail";
   }
+
+  /**
+   * 功能描述:秒杀商品 1.判断用户是否为空，若登录用户为空则返回用户不存在 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
+   * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
+   *
+   * @param model
+   * @param user
+   * @param goodsId
+   * @return
+   */
+  @RequestMapping(value = "/doSeckill", method = RequestMethod.POST)
+  @ResponseBody
+  public RespBean doSeckill(Model model, User user, Long goodsId) {
+
+    //若登录用户为空则返回用户不存在
+    if (user == null) {
+      return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
+    }
+
+    GoodsVO goods = goodsService.findGoodsByGoodsId(goodsId);
+    //判断库存是否足够
+    if (goods.getStockCount() < 1) {
+      model.addAttribute("errmsg", RespBeanEnum.NO_GOODS.getMessage());
+      return RespBean.error(RespBeanEnum.NO_GOODS);
+    }
+
+    //判断是否重复抢购商品
+    SeckillOrder seckillOrder = seckillOrderService.getOne(
+        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+    if (seckillOrder != null) {
+      model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMessage());
+      return RespBean.error(RespBeanEnum.REPEATE_MIAOSHA);
+    }
+
+    //秒杀商品(即生成订单)
+    Order order = orderService.seckill(user, goods);
+    return RespBean.success(order);
+  }
+
 }

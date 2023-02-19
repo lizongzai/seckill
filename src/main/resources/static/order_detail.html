@@ -47,19 +47,19 @@
             </div>
             <div class="count">
                 <span>收货人：</span>
-                <span>XXX  1383838483</span>
+                <span>XXX  18112345678</span>
             </div>
             <div class="count">
                 <span>收货地址：</span>
-                <span>北京市昌平区回龙观龙博一区</span>
+                <span>上海市浦东新区万邦都市花园17栋</span>
             </div>
-
                 <button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
         </div>
     </div>
 </div>
 </body>
 </html>
+
 <script>
 
     $(function(){
@@ -78,9 +78,9 @@
             success:function(data){
                 if(data.code == 200){
                     render(data.obj);
-                }else if(data.code == 500216){
-                    layer.msg(data.message);
-                    window.location.href = "/page/login";
+                // }else if(data.code == 500216){
+                //     layer.msg(data.message);
+                //     window.location.href = "/page/login";
                 }else{
                     layer.msg(data.message);
                 }
@@ -92,7 +92,7 @@
     }
 
     function render(detail){
-        var goods = detail.goods;
+        var goods = detail.goodsVO;
         var order = detail.order;
         $("#goodsName").text(goods.goodsName);
         $("#goodsImg").attr("src", goods.goodsImg);
@@ -103,9 +103,16 @@
             status = "未支付"
         }else if(order.status == 1){
             status = "待发货";
+        }else if(order.status == 2){
+            status = "已发货";
+        }else if(order.status == 3){
+            status = "已收货";
+        }else if(order.status == 4){
+            status = "已退款";
+        }else if(order.status == 5){
+            status = "已完成";
         }
         $("#orderStatus").text(status);
-
     }
 
 </script>

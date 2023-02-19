@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -54,10 +54,10 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "订单状态：0 未支付，1已支付，2 已发货，3 已收货，4 已退款，‘5 已完成")
     private Integer status;
 
-    private LocalDateTime createDate;
+    private Date createDate;
 
     @ApiModelProperty(value = "支付时间")
-    private LocalDateTime payDate;
+    private Date payDate;
 
 
 }
