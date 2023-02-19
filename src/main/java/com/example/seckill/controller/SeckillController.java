@@ -12,6 +12,7 @@ import com.example.seckill.vo.GoodsVO;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,8 @@ public class SeckillController {
   private ISeckillOrderService seckillOrderService;
   @Autowired
   private IOrderService orderService;
+  @Autowired
+  private RedisTemplate redisTemplate;
 
   /**
    * 功能描述:秒杀商品 1.判断用户是否为空，若登录用户为空则跳转到登录页面 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
@@ -84,8 +87,12 @@ public class SeckillController {
   }
 
   /**
-   * 功能描述:秒杀商品 1.判断用户是否为空，若登录用户为空则返回用户不存在 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
+   * 功能描述:秒杀商品
+   * 1.判断用户是否为空，若登录用户为空则返回用户不存在
+   * 2.判断库存是否足够，库存不足无法参与秒杀活动
+   * 3.判断是否重复抢购商品即该商品每人限购一件
    * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
+   * 5.将上面（4.点）将从数据库获取抢购商品改成通过redis缓存中获取抢购商品(即秒杀商品)
    *
    * @param model
    * @param user
@@ -108,9 +115,12 @@ public class SeckillController {
       return RespBean.error(RespBeanEnum.NO_GOODS);
     }
 
-    //判断是否重复抢购商品
-    SeckillOrder seckillOrder = seckillOrderService.getOne(
-        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+    //判断是否重复抢购商品(优化从redis缓存中获取)
+    //SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+
+    //将从数据库获取抢购商品改成通过redis缓存中获取抢购商品(即秒杀商品)
+    SeckillOrder seckillOrder = (SeckillOrder) redisTemplate.opsForValue().get("order:" + user.getId() + ":" + goods.getId());
+
     if (seckillOrder != null) {
       model.addAttribute("errmsg", RespBeanEnum.REPEATE_MIAOSHA.getMessage());
       return RespBean.error(RespBeanEnum.REPEATE_MIAOSHA);

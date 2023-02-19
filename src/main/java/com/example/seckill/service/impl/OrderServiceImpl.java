@@ -1,6 +1,7 @@
 package com.example.seckill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.mapper.GoodsMapper;
@@ -16,11 +17,14 @@ import com.example.seckill.service.ISeckillGoodsService;
 import com.example.seckill.service.ISeckillOrderService;
 import com.example.seckill.vo.GoodsVO;
 import com.example.seckill.vo.OrderDetailVo;
+import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
 import java.time.LocalDateTime;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -45,24 +49,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
   private GoodsMapper goodsMapper;
   @Autowired
   private IGoodsService goodsService;
+  @Autowired
+  private RedisTemplate redisTemplate;
 
   /**
-   * 秒杀商品
+   * 功能描述: 秒杀商品 1.解决库存商品超卖问题 2.将秒杀订单信息存放在redis缓存中
    *
    * @param user
    * @param goods
    * @return
    */
   @Override
+  @Transactional
   public Order seckill(User user, GoodsVO goods) {
 
     //秒杀商品表库存减去“1”
     //SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(
-        new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+    SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+
     //System.out.println("秒杀商品表库存减去 = " + seckillGoods);
-    seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
-    seckillGoodsService.updateById(seckillGoods);
+    //seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
+    //seckillGoodsService.updateById(seckillGoods);
+
+    //解决库存商品超卖问题
+    boolean seckillResult = seckillGoodsService.update(
+        new UpdateWrapper<SeckillGoods>()
+            .setSql("stock_count = stock_count -1") //库存商品减去“-1”
+            .eq("goods_id", goods.getId())  //根据商品goodsId更新
+            .ge("stock_count", 0));     //条件必须库存大于0
+    if (!seckillResult) {
+      return null;
+    }
 
     //生成订单
     Order order = new Order();
@@ -85,6 +102,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     seckillOrder.setGoodsId(goods.getId());
     seckillOrderService.save(seckillOrder);
     //System.out.println("生成秒杀订单" + seckillOrder);
+
+    //将秒杀订单信息存放在redis缓存中
+    redisTemplate.opsForValue().set("order:" + user.getId() + ":" + goods.getId(), seckillOrder);
 
     return order;
   }
