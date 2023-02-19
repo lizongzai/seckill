@@ -1,10 +1,13 @@
 package com.example.seckill.controller;
 
 
+import com.example.seckill.config.rabbitMQ.MQSender;
 import com.example.seckill.pojo.User;
 import com.example.seckill.vo.RespBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -17,8 +20,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
+  @Autowired
+  private MQSender mqSender;
+
+  /**
+   * 功能描述: 用户信息测试
+   *
+   * @param user
+   * @return
+   */
   public RespBean info(User user) {
     return RespBean.success(user);
+  }
+
+  /**
+   * 功能描述: 测试RabbitMQ消息
+   */
+  @RequestMapping("/mq")
+  @ResponseBody
+  public void mq() {
+    mqSender.send("hello world");
   }
 
 

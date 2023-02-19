@@ -55,6 +55,42 @@ spring:
         #最小空闲连接
         min-idle: 5
 
+  # rabbitmq配置
+  rabbitmq:
+    # 用户名
+    username: guest
+    # 密码
+    password: guest
+    # 服务器地址
+    host: localhost
+    # 端口
+    port: 5672
+    # 监听信息
+    listener:
+      simple:
+        #消费者最小数量
+        concurrency: 10
+        #消费者最大数量
+        max-concurrency: 10
+        #限制消费者每次只处理一条信息,处理完再继续下一条消息
+        prefetch: 1
+        #启动时是否默认启动容器,默认true
+        auto-startup: true
+        #被拒绝重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        #发布重试,默认false
+        enabled: false
+        #重试时间,默认1000ms
+        initial-interval: 1000ms
+        #重试最大次数,默认3次
+        max-attempts: 3
+        #重试最大间隔时间,默认1000ms
+        max-interval: 1000ms
+        #重试的间隔乘数,比如配2.0,第一次就等10s,第二次就等20秒杀,第三次就等40s
+        multiplier: 1
+
   #静态资源配置
   web:
     resources:

@@ -127,6 +127,12 @@
       <version>1.2.57</version>
     </dependency>
 
+    <!--AMQP 依赖-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
