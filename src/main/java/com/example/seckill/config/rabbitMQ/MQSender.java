@@ -26,7 +26,7 @@ public class MQSender {
 
   /**
    * 功能描述: Fanout工作模式
-   * 1.将消失发送到fanout_exchange
+   * 1.将消失发送到fanoutExchange
    *
    * @param message
    */
@@ -35,11 +35,23 @@ public class MQSender {
     rabbitTemplate.convertAndSend("fanoutExchange", "", message);
   }
 
+  /**
+   * 功能描述: Direct直连模式
+   * 1.将消失发送到directExchange
+   *
+   * @param message
+   */
   public void sendDirect01(Object message) {
     log.info("发送Red消息: " + message);
     rabbitTemplate.convertAndSend("directExchange", "queue.red", message);
   }
 
+  /**
+   * 功能描述: Direct直连模式
+   * 1.将消失发送到directExchange
+   *
+   * @param message
+   */
   public void sendDirect02(Object message) {
     log.info("发送Green消息: " + message);
     rabbitTemplate.convertAndSend("directExchange", "queue.green", message);
