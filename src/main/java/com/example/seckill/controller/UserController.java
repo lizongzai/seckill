@@ -43,4 +43,33 @@ public class UserController {
   }
 
 
+  /**
+   * 功能描述: Fanout工作模式
+   */
+  @RequestMapping("/mq/fanout")
+  @ResponseBody
+  public void mqFanout() {
+    mqSender.sendFanout("hello, fanout");
+  }
+
+  /**
+   * 功能描述: Direct直连模式
+   */
+  @RequestMapping("/mq/direct01")
+  @ResponseBody
+  public void mqDirect01() {
+    mqSender.sendDirect01("hello, red");
+  }
+
+  /**
+   * 功能描述: Direct直连模式
+   */
+  @RequestMapping("/mq/direct02")
+  @ResponseBody
+  public void mqDirect02() {
+    mqSender.sendDirect02("hello, green");
+  }
+
+
+
 }
