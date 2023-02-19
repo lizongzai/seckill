@@ -105,6 +105,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     //获取订单
     Order order = orderMapper.selectById(orderId);
+
     //获取商品返回对象
     GoodsVO goodsVO = goodsService.findGoodsByGoodsId(order.getGoodsId());
 
