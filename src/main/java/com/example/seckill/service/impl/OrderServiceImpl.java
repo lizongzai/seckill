@@ -112,7 +112,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     OrderDetailVo detail = new OrderDetailVo();
     detail.setOrder(order);
     detail.setGoodsVO(goodsVO);
-    System.out.println("获取订单详情 = " + detail);
+
     //返回订单详情
     return detail;
   }
