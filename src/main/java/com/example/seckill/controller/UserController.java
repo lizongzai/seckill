@@ -71,5 +71,41 @@ public class UserController {
   }
 
 
+  /**
+   * 功能描述: Topic主题模式
+   */
+  @RequestMapping("/mq/topic01")
+  @ResponseBody
+  public void sendTopic01() {
+    mqSender.sendTopic01("hello, red");
+  }
+
+  /**
+   * 功能描述: Topic主题模式
+   */
+  @RequestMapping("/mq/topic02")
+  @ResponseBody
+  public void sendTopic02() {
+    mqSender.sendTopic02("hello, green");
+  }
+
+  /**
+   * 功能描述: Headers模式
+   */
+  @RequestMapping("/mq/headers01")
+  @ResponseBody
+  public void sendHeaders01() {
+    mqSender.sendHeaders02("hello, Header01");
+  }
+
+  /**
+   * 功能描述: Headers模式
+   */
+  @RequestMapping("/mq/headers02")
+  @ResponseBody
+  public void sendHeaders02() {
+    mqSender.sendHeaders02("hello, Header02");
+  }
+
 
 }
