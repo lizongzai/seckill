@@ -4,13 +4,12 @@ import com.example.seckill.pojo.User;
 import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.vo.DetailVo;
-import com.example.seckill.vo.GoodsVO;
+import com.example.seckill.vo.GoodsVo;
 import com.example.seckill.vo.RespBean;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
 
 @Controller
 @RequestMapping(value = "/goods")
@@ -207,12 +205,12 @@ public class GoodsController {
     model.addAttribute("user", user);
 
     //获取秒杀商品信息
-    GoodsVO goodsVO = goodsService.findGoodsByGoodsId(goodsId);
-    model.addAttribute("goods", goodsVO);
+    GoodsVo goodsVo = goodsService.findGoodsByGoodsId(goodsId);
+    model.addAttribute("goods", goodsVo);
 
     //通过秒杀商品开始和结束时间，判断秒杀状态
-    Date startDate = goodsVO.getStartDate();
-    Date endDate = goodsVO.getEndDate();
+    Date startDate = goodsVo.getStartDate();
+    Date endDate = goodsVo.getEndDate();
     Date nowDate = new Date();
 
     //秒杀状态
@@ -262,10 +260,10 @@ public class GoodsController {
   public RespBean detail(Model model, User user, @PathVariable Long goodsId) {
 
     //获取秒杀商品信息
-    GoodsVO goodsVO = goodsService.findGoodsByGoodsId(goodsId);
+    GoodsVo goodsVo = goodsService.findGoodsByGoodsId(goodsId);
     //通过秒杀商品开始和结束时间，判断秒杀状态
-    Date startDate = goodsVO.getStartDate();
-    Date endDate = goodsVO.getEndDate();
+    Date startDate = goodsVo.getStartDate();
+    Date endDate = goodsVo.getEndDate();
     Date nowDate = new Date();
 
     //秒杀状态
@@ -291,7 +289,7 @@ public class GoodsController {
     //商品详情公共返回对象,仅供前端展现使用
     DetailVo detailVo = new DetailVo();
     detailVo.setUser(user);
-    detailVo.setGoodsVO(goodsVO);
+    detailVo.setGoodsVO(goodsVo);
     detailVo.setSeckillStatus(seckillStatus);
     detailVo.setRemainSeconds(remainSeconds);
 

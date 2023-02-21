@@ -23,7 +23,7 @@
   </sql>
 
   <!-- 获取所有秒杀商品详情-->
-  <resultMap id="SeckillGoodsInfo" type="com.example.seckill.vo.GoodsVO" extends="BaseResultMap">
+  <resultMap id="SeckillGoodsInfo" type="com.example.seckill.vo.GoodsVo" extends="BaseResultMap">
     <id column="id" property="id"/>
     <result column="goods_name" property="goods_name"/>
     <result column="goods_title" property="goods_title"/>
@@ -39,7 +39,7 @@
 
 
   <!-- 获取所有秒杀商品详情-->
-  <select id="findGoodsVo" resultType="com.example.seckill.vo.GoodsVO">
+  <select id="findGoodsVo" resultType="com.example.seckill.vo.GoodsVo">
     select g.id,
            g.goods_name,
            g.goods_title,
@@ -57,7 +57,7 @@
   </select>
 
   <!--  获取商品详情-->
-  <select id="findGoodsByGoodsId" resultType="com.example.seckill.vo.GoodsVO">
+  <select id="findGoodsByGoodsId" resultType="com.example.seckill.vo.GoodsVo">
     select g.id,
            g.goods_name,
            g.goods_title,

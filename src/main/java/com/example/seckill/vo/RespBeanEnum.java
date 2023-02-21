@@ -103,7 +103,7 @@ public enum RespBeanEnum {
   MOBILE_ERROR(500212, "手机号码格式错误"),
   BIND_ERROR(500101, "参数校验异常：%s"),
   REPEATE_MIAOSHA(500501, "该商品每人限购一件"),
-  NO_GOODS(500100, "商品库存不足"),
+  EMPTY_STOCK(500100, "商品库存不足"),
 
   PASSWORD_ERROR(500215, "密码错误"),
   PASSWORD_UPDATE_FAIL(500214, "密码更新失败"),

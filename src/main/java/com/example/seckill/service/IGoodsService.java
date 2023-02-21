@@ -2,7 +2,7 @@ package com.example.seckill.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.seckill.pojo.Goods;
-import com.example.seckill.vo.GoodsVO;
+import com.example.seckill.vo.GoodsVo;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public interface IGoodsService extends IService<Goods> {
    *
    * @return
    */
-  List<GoodsVO> findGoodsVo();
+  List<GoodsVo> findGoodsVo();
 
   /**
    * 获取商品详情
@@ -28,5 +28,5 @@ public interface IGoodsService extends IService<Goods> {
    * @param goodsId
    * @return
    */
-  GoodsVO findGoodsByGoodsId(Long goodsId);
+  GoodsVo findGoodsByGoodsId(Long goodsId);
 }

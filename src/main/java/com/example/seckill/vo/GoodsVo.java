@@ -3,7 +3,6 @@ package com.example.seckill.vo;
 import com.example.seckill.pojo.Goods;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoodsVO extends Goods {
+public class GoodsVo extends Goods {
 
   @ApiModelProperty(value = "秒杀价")
   private BigDecimal seckillPrice;

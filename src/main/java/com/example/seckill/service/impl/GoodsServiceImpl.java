@@ -3,7 +3,7 @@ package com.example.seckill.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.seckill.mapper.GoodsMapper;
 import com.example.seckill.pojo.Goods;
-import com.example.seckill.vo.GoodsVO;
+import com.example.seckill.vo.GoodsVo;
 import com.example.seckill.service.IGoodsService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
    * @return
    */
   @Override
-  public List<GoodsVO> findGoodsVo() {
+  public List<GoodsVo> findGoodsVo() {
     //System.out.println("获取所有商品列表 = " +  goodsMapper.findGoodsVo());
     return goodsMapper.findGoodsVo();
   }
@@ -41,7 +41,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
    * @return
    */
   @Override
-  public GoodsVO findGoodsByGoodsId(Long goodsId) {
+  public GoodsVo findGoodsByGoodsId(Long goodsId) {
     //System.out.println("秒杀商品详情 = " + goodsMapper.findGoodsByGoodsId(goodsId));
     return goodsMapper.findGoodsByGoodsId(goodsId);
   }

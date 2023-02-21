@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailVo {
-  private GoodsVO goodsVO;
+  private GoodsVo goodsVO;
   private Order order;
 }

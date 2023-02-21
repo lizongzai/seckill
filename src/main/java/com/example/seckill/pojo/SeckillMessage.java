@@ -1,12 +1,11 @@
-package com.example.seckill.vo;
+package com.example.seckill.pojo;
 
-import com.example.seckill.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 详情返回对象
+ * 功能描述: 秒杀信息
  *
  * @author lizongzai
  * @since 1.0.0
@@ -14,11 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailVo {
-
+public class SeckillMessage {
   private User user;
-  private GoodsVo goodsVO;
-  private int seckillStatus;
-  private int remainSeconds;
-
+  private Long goodsId;
 }
