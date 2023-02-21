@@ -15,15 +15,19 @@ import com.example.seckill.service.IGoodsService;
 import com.example.seckill.service.IOrderService;
 import com.example.seckill.service.ISeckillGoodsService;
 import com.example.seckill.service.ISeckillOrderService;
+import com.example.seckill.utils.MD5Util;
 import com.example.seckill.vo.GoodsVo;
 import com.example.seckill.vo.OrderDetailVo;
 import com.example.seckill.vo.RespBeanEnum;
 import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -65,13 +69,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     //redis缓存数据库
     ValueOperations valueOperations = redisTemplate.opsForValue();
     //秒杀商品表减库存
-    SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
+    SeckillGoods seckillGoods = seckillGoodsService.getOne(
+        new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
     //秒杀商品表库存减去“1”
     seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
     boolean seckillGoodsResult = seckillGoodsService.update(new UpdateWrapper<SeckillGoods>().
         setSql("stock_count = stock_count -1"). //库存商品减去“-1”
-        eq("goods_id", goods.getId()). //根据商品goodsId更新
-        gt("stock_count", 0)); //满足条件库存大于0
+            eq("goods_id", goods.getId()). //根据商品goodsId更新
+            gt("stock_count", 0)); //满足条件库存大于0
 
     //判断是否有库存
     if (seckillGoods.getStockCount() < 1) {
@@ -132,5 +137,41 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     //返回订单详情
     return detail;
+  }
+
+  /**
+   * 功能描述: 获取秒杀地址
+   *
+   * @param user
+   * @param goodsId
+   * @return
+   */
+  @Override
+  public String createPath(User user, Long goodsId) {
+    //uuid进行MD5加密处理
+    String uuid = MD5Util.md5(UUID.randomUUID() + "123456");
+    //uuid存入redis缓存中
+    redisTemplate.opsForValue().set("seckillPath:" + user.getId() + ":" + goodsId, uuid, 60, TimeUnit.SECONDS);
+    //返回加密的uuid给前端使用
+    return uuid;
+  }
+
+  /**
+   * 功能描述: 检验秒杀地址
+   *
+   * @param path
+   * @param user
+   * @param goodsId
+   * @return
+   */
+  @Override
+  public boolean checkPath(String path, User user, Long goodsId) {
+    //判断传输三个参数是否合法
+    if (user == null || goodsId <0 || StringUtils.isEmpty(path)) {
+      return false;
+    }
+    //获取redis中加密后的uuid
+    String redisPath = (String) redisTemplate.opsForValue().get("seckillPath:" + user.getId() + ":" + goodsId);
+    return redisPath.equals(path);
   }
 }

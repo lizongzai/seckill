@@ -24,6 +24,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,7 +52,10 @@ public class SeckillController implements InitializingBean {
   private Map<Long, Boolean> EmptyStockMap = new HashMap<>();
 
   /**
-   * 功能描述:秒杀商品(第一阶段) 1.判断用户是否为空，若登录用户为空则跳转到登录页面 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
+   * 功能描述:秒杀商品(第一阶段)
+   * 1.判断用户是否为空，若登录用户为空则跳转到登录页面
+   * 2.判断库存是否足够，库存不足无法参与秒杀活动
+   * 3.判断是否重复抢购商品即该商品每人限购一件
    * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
    *
    * @param model
@@ -99,8 +103,12 @@ public class SeckillController implements InitializingBean {
   }
 
   /**
-   * 功能描述:秒杀商品(第二阶段优化) 1.判断用户是否为空，若登录用户为空则返回用户不存在 2.判断库存是否足够，库存不足无法参与秒杀活动 3.判断是否重复抢购商品即该商品每人限购一件
-   * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1” 5.将上面（4.点）将从数据库获取抢购商品改成通过redis缓存中获取抢购商品(即秒杀商品)
+   * 功能描述:秒杀商品(第二阶段优化)
+   * 1.判断用户是否为空，若登录用户为空则返回用户不存在
+   * 2.判断库存是否足够，库存不足无法参与秒杀活动
+   * 3.判断是否重复抢购商品即该商品每人限购一件
+   * 4.生成秒杀商品(即生成订单表、秒杀订单表)，秒杀商品表库存减去“1”
+   * 5.将上面（4.点）将从数据库获取抢购商品改成通过redis缓存中获取抢购商品(即秒杀商品)
    *
    * @param model
    * @param user
@@ -148,18 +156,18 @@ public class SeckillController implements InitializingBean {
    * 3.RabbitMQ消息队列处理异步数据库操作
    * 4.封装SeckillMessage秒杀消息对象
    * 5.通过RabbtiMQ发送秒杀商品消息，紧接着消息接收者中做了实际秒杀操作动作
-   * 5.1 判断商品库存是否为空
-   * 5.2 判断是否重复抢购商品
-   * 5.3 下单操作
+   *    5.1 判断商品库存是否为空
+   *    5.2 判断是否重复抢购商品
+   *    5.3 下单操作
    *
    * @param model
    * @param user
    * @param goodsId
    * @return
    */
-  @RequestMapping(value = "/doSeckill", method = RequestMethod.POST)
+  @RequestMapping(value = "/{path}/doSeckill", method = RequestMethod.POST)
   @ResponseBody
-  public RespBean doSeckill(Model model, User user, Long goodsId) {
+  public RespBean doSeckill(@PathVariable String path, User user, Long goodsId) {
 
     //判断用户是否为空
     if (user == null) {
@@ -168,6 +176,13 @@ public class SeckillController implements InitializingBean {
 
     //获取redis缓存
     ValueOperations valueOperations = redisTemplate.opsForValue();
+
+    //检验秒杀地址
+    boolean check = orderService.checkPath(path,user,goodsId);
+    if (!check) {
+      return RespBean.error(RespBeanEnum.REQUEST_ILLEGAL);
+    }
+
     //判断是否重复抢购商品
     SeckillOrder seckillOrder = (SeckillOrder) redisTemplate.opsForValue()
         .get("order:" + user.getId() + ":" + goodsId);
@@ -185,7 +200,6 @@ public class SeckillController implements InitializingBean {
     if (stock < 0) {
       //鉴于库存的数量不能为负数(即"-1"),所以再次加”1“,使库存的数量为0
       valueOperations.increment("seckillGoods:" + goodsId);
-
       //通过内存标记，true表示redis缓存中的库存为空
       EmptyStockMap.put(goodsId, true);
       return RespBean.error(RespBeanEnum.EMPTY_STOCK);
@@ -233,5 +247,23 @@ public class SeckillController implements InitializingBean {
     }
     Long orderId = seckillOrderService.getResult(user, goodsId);
     return RespBean.success(orderId);
+  }
+
+  /**
+   * 功能描述: 获取秒杀地址
+   *
+   * @param user
+   * @param goodsId
+   * @return
+   */
+  @RequestMapping(value = "/path", method = RequestMethod.GET)
+  @ResponseBody
+  public RespBean getSeckillPath(User user, Long goodsId) {
+    if (user == null) {
+      return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
+    }
+    //返回加密后的uuid
+    String uuid = orderService.createPath(user, goodsId);
+    return RespBean.success(uuid);
   }
 }

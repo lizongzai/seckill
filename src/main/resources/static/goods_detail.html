@@ -49,7 +49,7 @@
         <span id="stockCount"></span>
       </div>
 
-      <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="doSeckill()">立即秒杀</button>
+      <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
       <input type="hidden" name="goodsId" id="goodsId"/>
     </div>
   </div>
@@ -69,36 +69,36 @@
 
 <script>
 
-  // function getSeckillPath(){
-  //   var goodsId = $("#goodsId").val();
-  //   g_showLoading();
-  //   $.ajax({
-  //     url:"/seckill/path",
-  //     type:"GET",
-  //     data:{
-  //       goodsId:goodsId
-  //     },
-  //     success:function(data){
-  //       if(data.code === 0){
-  //         var path = data.data;
-  //         doSeckill(path);
-  //       } else if(data.code === 500216){
-  //         layer.confirm("未登录是否去登录！！！", {btn: ["确定", "取消"]},
-  //             function () {
-  //               window.location.href = "/page/login";
-  //             },
-  //             function () {
-  //               layer.closeAll();
-  //             });
-  //       }else{
-  //         layer.msg(data.msg);
-  //       }
-  //     },
-  //     error:function(){
-  //       layer.msg("客户端请求有误");
-  //     }
-  //   });
-  // }
+  function getSeckillPath(){
+    var goodsId = $("#goodsId").val();
+    g_showLoading();
+    $.ajax({
+      url:"/seckill/path",
+      type:"GET",
+      data:{
+        goodsId:goodsId
+      },
+      success:function(data){
+        if(data.code === 200){
+          var path = data.obj;
+          doSeckill(path);
+        // } else if(data.code === 500216){
+        //   layer.confirm("未登录是否去登录！！！", {btn: ["确定", "取消"]},
+        //       function () {
+        //         window.location.href = "/page/login";
+        //       },
+        //       function () {
+        //         layer.closeAll();
+        //       });
+        }else{
+          layer.msg(data.message);
+        }
+      },
+      error:function(){
+        layer.msg("客户端请求有误");
+      }
+    });
+  }
 
   // function getSeckillResult(goodsId) {
   //   g_showLoading();
@@ -166,9 +166,9 @@
   //   );
   // }
 
-  function doSeckill() {
+  function doSeckill(path) {
     $.ajax({
-      url: '/seckill/doSeckill',
+      url: '/seckill/' + path + '/doSeckill',
       type: 'POST',
       data:{
         goodsId: $("#goodsId").val()
