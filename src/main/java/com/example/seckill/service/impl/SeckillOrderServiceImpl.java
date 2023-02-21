@@ -24,35 +24,6 @@ import org.springframework.stereotype.Service;
 public class SeckillOrderServiceImpl extends
     ServiceImpl<SeckillOrderMapper, SeckillOrder> implements ISeckillOrderService {
 
-  //  @Autowired
-  //  private SeckillOrderMapper seckillOrderMapper;
-  //  @Autowired
-  //  private RedisTemplate redisTemplate;
-  //
-  //  /**
-  //   * 获取秒杀商品结果
-  //   *
-  //   * @param user
-  //   * @param goodsId
-  //   * @return orderId:秒杀商品有结果表示成功, -1:表示秒杀失败, 0: 表示排队中
-  //   */
-  //  @Override
-  //  public Long getSeckillResult(User user, Long goodsId) {
-  //
-  //    //获取秒杀订单结果
-  //    SeckillOrder seckillOrder = seckillOrderMapper.selectOne(
-  //        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
-  //
-  //    //库存不为空
-  //    if (null != seckillOrder) {
-  //      return seckillOrder.getOrderId();
-  //      //库存为空,表示秒杀失败
-  //    } else if (redisTemplate.hasKey("isStockeEmpty:" + goodsId)) {
-  //      return -1L;
-  //    } else {
-  //      return 0L;
-  //    }
-  //  }
   @Autowired
   private SeckillOrderMapper seckillOrderMapper;
 
@@ -62,19 +33,22 @@ public class SeckillOrderServiceImpl extends
   /**
    * 返回值；orderId：成功;-1：秒杀失败;0：排队中
    *
-   * @Param: [user, goodsId]
-   * @return: java.lang.Long
-   * @Date: 2022/8/4
+   * @param user
+   * @param goodsId
+   * @return
    */
   @Override
   public Long getResult(User user, Long goodsId) {
-    SeckillOrder seckillOrder = seckillOrderMapper.selectOne(new QueryWrapper<SeckillOrder>().
-        eq("user_id", user.getId()).
-        eq("goods_id", goodsId)
+    SeckillOrder seckillOrder = seckillOrderMapper.selectOne(
+        new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId)
     );
-    if(null != seckillOrder){
+
+    //判断库存是否空
+    if (null != seckillOrder) {
       return seckillOrder.getOrderId();
-    } else if (redisTemplate.hasKey("isStockEmpty:"+goodsId)) {
+
+      //库存为空,表示秒杀失败
+    } else if (redisTemplate.hasKey("isStockEmpty:" + goodsId)) {
       return -1L;
     } else {
       return 0L;

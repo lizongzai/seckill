@@ -62,76 +62,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
   @Transactional
   public Order seckill(User user, GoodsVo goods) {
 
-    //    //准备redis缓存数据库
-    //    ValueOperations valueOperations = redisTemplate.opsForValue();
-    //
-    //    //秒杀商品表库存减去“1”
-    //    SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    //    //SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    //
-    //    System.out.println("秒杀商品表库存减去 = " + seckillGoods);
-    //    //seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
-    //    //seckillGoodsService.updateById(seckillGoods);
-    //
-    //    //解决库存商品超卖问题
-    //    boolean seckillResult = seckillGoodsService.update(
-    //        new UpdateWrapper<SeckillGoods>()
-    //            .setSql("stock_count = stock_count -1") //库存商品减去“-1”
-    //            .eq("goods_id", goods.getId())  //根据商品goodsId更新
-    //            .ge("stock_count", 0));     //条件必须库存大于0
-    //
-    //    //判断秒杀商品库存是否为空
-    //    if (seckillGoods.getStockCount() <1) {
-    //      valueOperations.set("isStockEmpty:" + goods.getId(), "0");
-    //      return null;
-    //    }
-    //
-    //    //生成订单
-    //    Order order = new Order();
-    //    order.setUserId(user.getId());
-    //    order.setGoodsId(goods.getId());
-    //    order.setAddrId(0L);
-    //    order.setGoodsName(goods.getGoodsName());
-    //    order.setGoodsCount(1);
-    //    order.setGoodsPrice(goods.getSeckillPrice());
-    //    order.setOrderChannel(1);
-    //    order.setStatus(0);
-    //    order.setCreateDate(new Date());
-    //    orderMapper.insert(order);
-    //    System.out.println("生成订单 = " + order);
-    //
-    //    //生成秒杀订单
-    //    SeckillOrder seckillOrder = new SeckillOrder();
-    //    seckillOrder.setUserId(user.getId());
-    //    seckillOrder.setOrderId(order.getId());
-    //    seckillOrder.setGoodsId(goods.getId());
-    //    seckillOrderService.save(seckillOrder);
-    //    System.out.println("生成秒杀订单" + seckillOrder);
-    //
-    //    //将秒杀订单信息存放在redis缓存中
-    //    redisTemplate.opsForValue().set("order:" + user.getId() + ":" + goods.getId(), seckillOrder);
-    //
-    //    return order;
-
+    //redis缓存数据库
     ValueOperations valueOperations = redisTemplate.opsForValue();
-    // 秒杀商品表减库存
+    //秒杀商品表减库存
     SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-    System.out.println("秒杀商品表减库存 = " + seckillGoods);
-
+    //秒杀商品表库存减去“1”
     seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
-//        seckillGoodsService.updateById(seckillGoods);
-//        boolean seckillGoodsResult = seckillGoodsService.update(new UpdateWrapper<SeckillGoods>().
-//                set("stock_count", seckillGoods.getStockCount()).
-//                eq("id", seckillGoods.getId()).
-//                gt("stock_count", 0));
-
     boolean seckillGoodsResult = seckillGoodsService.update(new UpdateWrapper<SeckillGoods>().
-        setSql("stock_count = stock_count -1").
-        eq("goods_id", goods.getId()).
-        gt("stock_count", 0));
+        setSql("stock_count = stock_count -1"). //库存商品减去“-1”
+        eq("goods_id", goods.getId()). //根据商品goodsId更新
+        gt("stock_count", 0)); //满足条件库存大于0
 
+    //判断是否有库存
     if (seckillGoods.getStockCount() < 1) {
-      // 判断是否有库存
       valueOperations.set("isStockEmpty:" + goods.getId(), "0");
       return null;
     }
@@ -148,7 +91,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     order.setStatus(0);
     order.setCreateDate(new Date());
     orderMapper.insert(order);
-    System.out.println("生成订单 = " + order);
+    //System.out.println("生成订单 = " + order);
 
     //生成秒杀订单
     SeckillOrder seckillOrder = new SeckillOrder();
@@ -156,10 +99,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     seckillOrder.setOrderId(order.getId());
     seckillOrder.setGoodsId(goods.getId());
     seckillOrderService.save(seckillOrder);
-    System.out.println("生成秒杀订单" + seckillOrder);
+    //System.out.println("生成秒杀订单" + seckillOrder);
 
     redisTemplate.opsForValue().set("order" + user.getId() + ":" + goods.getId(), seckillOrder);
-
     return order;
   }
 
