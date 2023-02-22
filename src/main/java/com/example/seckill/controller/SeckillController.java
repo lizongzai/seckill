@@ -2,6 +2,7 @@ package com.example.seckill.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.config.rabbitMQ.MQSeckillSender;
 import com.example.seckill.pojo.Order;
 import com.example.seckill.pojo.SeckillMessage;
@@ -14,9 +15,15 @@ import com.example.seckill.utils.JsonUtil;
 import com.example.seckill.vo.GoodsVo;
 import com.example.seckill.vo.RespBean;
 import com.example.seckill.vo.RespBeanEnum;
+import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.ChineseGifCaptcha;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @since 1.0.0
  */
 @Controller
+@Slf4j
 @RequestMapping("/seckill")
 public class SeckillController implements InitializingBean {
 
@@ -265,5 +273,39 @@ public class SeckillController implements InitializingBean {
     //返回加密后的uuid
     String uuid = orderService.createPath(user, goodsId);
     return RespBean.success(uuid);
+  }
+
+  /**
+   * 功能描述: 生成验证码
+   *
+   * @param user
+   * @param goodsId
+   * @param response
+   */
+  @RequestMapping(value = "/captcha", method = RequestMethod.GET)
+  public void verifyCode(User user, Long goodsId, HttpServletResponse response){
+
+    if(user == null || goodsId < 0){
+      throw new GlobalException(RespBeanEnum.REQUEST_ILLEGAL);
+    }
+
+    //设置请求头输出图片类型
+    response.setContentType("image/jpg");
+    response.setHeader("Pragma", "No-cache");
+    response.setHeader("Cache-Control", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    //生成验证码
+//    ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48,3);
+    ChineseGifCaptcha captcha = new ChineseGifCaptcha(130, 48);
+    try {
+      redisTemplate.opsForValue().set("captcha:" + user.getId() + ":" + goodsId, captcha.text(), 300, TimeUnit.SECONDS);
+//      captcha.setLen(3);  // 几位数运算，默认是两位
+//      captcha.getArithmeticString();  // 获取运算的公式：3+2=?
+//      captcha.text();  // 获取运算的结果：5
+      captcha.out(response.getOutputStream()); // 输出验证码
+    } catch (Exception e) {
+      log.error("验证码生成失败", e.getMessage());
+    }
   }
 }

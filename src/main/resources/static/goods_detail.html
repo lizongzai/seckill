@@ -49,8 +49,12 @@
         <span id="stockCount"></span>
       </div>
 
-      <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
-      <input type="hidden" name="goodsId" id="goodsId"/>
+      <div>
+        <img id="captchaImg" width="130" height="32" onclick="refreshCaptcha()" style="display: none"/>
+        <input id="captcha" class="form-control" style="display: none"/>
+        <button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="getSeckillPath()">立即秒杀</button>
+        <input type="hidden" name="goodsId" id="goodsId"/>
+      </div>
     </div>
   </div>
 </div>
@@ -228,6 +232,10 @@
     getDetail();
   });
 
+  function refreshCaptcha(){
+    $("#captchaImg").attr("src", "/seckill/captcha?goodsId=" + $("#goodsId").val() + "&Time="+new Date());
+  }
+
   function getDetail() {
     //获取goodsId
     var goodsId = g_getQueryString("goodsId");
@@ -290,11 +298,16 @@
         clearTimeout(timeout);
       }
       $("#seckillTip").html("秒杀进行中");
+      $("#captchaImg").attr("src", "/seckill/captcha?goodsId=" + $("#goodsId").val() + "&Time="+new Date());
+      $("#captchaImg").show();
+      $("#captcha").show();
 
       //秒杀已经结束
     } else if (remainSeconds == -1){
       $("#buyButton").attr("disabled", true);
       $("#seckillTip").html("秒杀已经结束");
+      $("#captchaImg").hide();
+      $("#captcha").hide();
     }
   }
 
