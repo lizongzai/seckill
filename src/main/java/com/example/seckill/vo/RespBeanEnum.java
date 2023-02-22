@@ -111,6 +111,7 @@ public enum RespBeanEnum {
   USER_NOT_EXIST(500217, "用户不存在"),
   LOGIN_ERROR(500210, "用户名或密码不正确"),
   REQUEST_ILLEGAL(50018,"请求非法,请重新尝试"),
+  ERROR_CAPTCHA(50019,"验证码错误, 请重新输入"),
   ORDER_NOT_EXIST(500400, "订单不存在");
 
   private final Integer code;

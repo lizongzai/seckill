@@ -266,10 +266,19 @@ public class SeckillController implements InitializingBean {
    */
   @RequestMapping(value = "/path", method = RequestMethod.GET)
   @ResponseBody
-  public RespBean getSeckillPath(User user, Long goodsId) {
+  public RespBean getSeckillPath(User user, Long goodsId,String captcha) {
+
+    //判断用户是否为空
     if (user == null) {
       return RespBean.error(RespBeanEnum.USER_NOT_EXIST);
     }
+
+    //校验验证码
+    boolean isCaptcha = orderService.checkCaptcha(user, goodsId,captcha);
+    if (!isCaptcha) {
+      return RespBean.error(RespBeanEnum.ERROR_CAPTCHA);
+    }
+
     //返回加密后的uuid
     String uuid = orderService.createPath(user, goodsId);
     return RespBean.success(uuid);

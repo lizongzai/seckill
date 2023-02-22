@@ -51,4 +51,14 @@ public interface IOrderService extends IService<Order> {
    * @return
    */
   boolean checkPath(String path, User user, Long goodsId);
+
+  /**
+   * 功能描述: 校验验证码
+   *
+   * @param user
+   * @param goodsId
+   * @param captcha
+   * @return
+   */
+  boolean checkCaptcha(User user, Long goodsId, String captcha);
 }
