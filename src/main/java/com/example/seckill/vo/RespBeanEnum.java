@@ -112,6 +112,7 @@ public enum RespBeanEnum {
   LOGIN_ERROR(500210, "用户名或密码不正确"),
   REQUEST_ILLEGAL(50018,"请求非法,请重新尝试"),
   ERROR_CAPTCHA(50019,"验证码错误, 请重新输入"),
+  ACCESS_LIMIT_REACHED(50020,"访问过于频繁, 请稍后再试"),
   ORDER_NOT_EXIST(500400, "订单不存在");
 
   private final Integer code;

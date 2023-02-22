@@ -2,6 +2,7 @@ package com.example.seckill.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.seckill.config.accessLimit.AccessLimit;
 import com.example.seckill.config.exception.GlobalException;
 import com.example.seckill.config.rabbitMQ.MQSeckillSender;
 import com.example.seckill.pojo.Order;
@@ -259,11 +260,15 @@ public class SeckillController implements InitializingBean {
 
   /**
    * 功能描述: 获取秒杀地址
+   * 1.获取秒杀地址
+   * 2.校验验证码
+   * 3.通过注解方式限制访问：second=5表示5秒钟内,maxCount=5表示5秒钟内访问最大次,needLogin=true表示用户必须登录
    *
    * @param user
    * @param goodsId
    * @return
    */
+  @AccessLimit(second=5,maxCount=5,needLogin=true)
   @RequestMapping(value = "/path", method = RequestMethod.GET)
   @ResponseBody
   public RespBean getSeckillPath(User user, Long goodsId,String captcha) {

@@ -1,5 +1,6 @@
 package com.example.seckill.config.MVC;
 
+import com.example.seckill.config.accessLimit.UserContext;
 import com.example.seckill.pojo.User;
 import com.example.seckill.service.IUserService;
 import com.example.seckill.utils.CookieUtil;
@@ -47,17 +48,19 @@ public class UserHandlerMethodArgumentResolver implements HandlerMethodArgumentR
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-    //获取request
-    HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-    //获取response
-    HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-    //获取userTicket
-    String userTicket = CookieUtil.getCookieValue(request, "userTicket");
-    //判断userTicket是否为空
-    if (StringUtils.isEmpty(userTicket)) {
-      return null;
-    }
-    //根据Cookie获取用户
-    return userService.getUserByCookie(userTicket, request, response);
+      //    //获取request
+      //    HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+      //    //获取response
+      //    HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+      //    //获取userTicket
+      //    String userTicket = CookieUtil.getCookieValue(request, "userTicket");
+      //    //判断userTicket是否为空
+      //    if (StringUtils.isEmpty(userTicket)) {
+      //      return null;
+      //    }
+      //    //根据Cookie获取用户
+      //    return userService.getUserByCookie(userTicket, request, response);
+
+    return UserContext.getUserHolder();
   }
 }

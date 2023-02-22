@@ -1,10 +1,12 @@
 package com.example.seckill.config.MVC;
 
+import com.example.seckill.config.accessLimit.AccessLimitInterceptor;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,6 +24,8 @@ public class WebMVCConfig implements WebMvcConfigurer {
 
   @Autowired
   private UserHandlerMethodArgumentResolver userHandlerMethodArgumentResolver;
+  @Autowired
+  private AccessLimitInterceptor accessLimitInterceptor;
 
   /**
    * Spring MVC的参数解析器，用于添加自定义参数解析器
@@ -44,5 +48,15 @@ public class WebMVCConfig implements WebMvcConfigurer {
     //url访问路径
     //映射项目中真实路径“/static”,最后面必须加"/"，即可获取当前项目路径
     registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+  }
+
+  /**
+   * 功能描述: 接口限制拦截器
+   *
+   * @param registry
+   */
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(accessLimitInterceptor);
   }
 }
