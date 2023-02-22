@@ -88,7 +88,7 @@
         if(data.code === 200){
           var path = data.obj;
           doSeckill(path);
-        } else if(data.code === 500216){
+        } else if(data.code === 500217){
           layer.confirm("尚未登录是否去登录！！！", {btn: ["确定", "取消"]},
               function () {
                 window.location.href = "/login/toLogin";
@@ -117,7 +117,7 @@
         if(data.code == 200 ){
           // window.location.href="/orderDetail.htm?orderId="+data.obj.id;
           getResult($("#goodsId").val());
-        } else if (data.code == 500216) {
+        } else if (data.code == 500217) {
           layer.confirm(data.message, {btn: ["确定", "取消"]},
               function () {
                 window.location.href = "/login/toLogin";
