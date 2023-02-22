@@ -89,7 +89,7 @@
           var path = data.obj;
           doSeckill(path);
         } else if(data.code === 500216){
-          layer.confirm("未登录是否去登录！！！", {btn: ["确定", "取消"]},
+          layer.confirm("尚未登录是否去登录！！！", {btn: ["确定", "取消"]},
               function () {
                 window.location.href = "/login/toLogin";
               },
