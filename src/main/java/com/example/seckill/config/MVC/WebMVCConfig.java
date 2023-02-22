@@ -28,7 +28,7 @@ public class WebMVCConfig implements WebMvcConfigurer {
   private AccessLimitInterceptor accessLimitInterceptor;
 
   /**
-   * Spring MVC的参数解析器，用于添加自定义参数解析器
+   * 功能描述: Spring MVC的参数解析器，用于添加自定义参数解析器
    *
    * @param resolvers
    */
@@ -39,7 +39,7 @@ public class WebMVCConfig implements WebMvcConfigurer {
   }
 
   /**
-   * 自定义静态资源映射目录
+   * 功能描述: 自定义静态资源映射目录
    *
    * @param registry
    */
