@@ -10,9 +10,10 @@
   - JQuery
 - 后端
   - Spring Boot
+  - Ubuntu
   - Docker
   - MySQL
-  - MyBatis Plus
+  - MyBatis/MybatisPlus
   - Lombok
   - Swagger2
   - JMeter
